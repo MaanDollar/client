@@ -6,12 +6,13 @@ import { Button, Stack, styled } from "@mui/joy";
 import imgKakao from "./kakao.png";
 import Image from "next/image";
 import Link from "next/link";
+import PlaceholderImage from "@/components/PlaceholderImage";
 
 const LoginContainer = styled(Centering)`
   height: 100%;
 `;
 
-const LogoImage = styled("img")`
+const LogoImage = styled(PlaceholderImage)`
   display: block;
   width: 80%;
   max-width: 16rem;
@@ -27,7 +28,7 @@ const Page = () => {
         justifyContent="center"
         sx={{ width: "100%", height: "100%" }}
       >
-        <LogoImage src="http://placehold.it/640x480" alt="logo" />
+        <LogoImage w={640} h={480} alt="logo" />
         <Button
           component={Link}
           href="/dashboard"
