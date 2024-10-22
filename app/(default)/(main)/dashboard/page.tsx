@@ -6,7 +6,7 @@ import { Divider } from "@mui/joy";
 import { useState } from "react";
 import AddModal from "./AddModal";
 import PortfolioDetails from "./PortfolioDetails";
-import ProtfolioSummary from "./PortfolioSummary";
+import PortfolioSummary from "./PortfolioSummary";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 
@@ -37,7 +37,7 @@ const Page = () => {
     <>
       <Contents>
         <div style={{ height: "1rem" }} />
-        <ProtfolioSummary portfolio={portfolio} />
+        <PortfolioSummary portfolio={portfolio} />
         <div style={{ height: "1rem" }} />
         <Divider />
         <div style={{ height: "1rem" }} />

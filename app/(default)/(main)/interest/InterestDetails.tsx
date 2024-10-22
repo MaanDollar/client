@@ -6,6 +6,7 @@ import { MockStockInterestResponse } from "@/types/StockInterest";
 import styled from "@emotion/styled";
 import { Table, Typography, Button, Stack } from "@mui/joy";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
+import Link from "next/link";
 import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 
 type SortColumn = "name" | "priceCurrent" | "priceYesterday" | "priceChange";
@@ -133,6 +134,10 @@ const InterestDetails = ({
         </Button>
       </Stack>
       <div style={{ height: "1rem" }} />
+      <Typography level="body-sm" textColor="text.tertiary">
+        종목명을 클릭하여 AI 리포트를 열람할 수 있습니다.
+      </Typography>
+      <div style={{ height: "1rem" }} />
       <TableContainer>
         <Table
           sx={(theme) => ({
@@ -189,7 +194,12 @@ const InterestDetails = ({
               <Fragment key={stock.code}>
                 <tr key={stock.code}>
                   <td>
-                    <Typography level="body-sm" noWrap>
+                    <Typography
+                      component={Link}
+                      href={`/stock/${stock.code}`}
+                      level="body-sm"
+                      noWrap
+                    >
                       {stock.name}
                     </Typography>
                   </td>

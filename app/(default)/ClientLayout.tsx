@@ -2,7 +2,10 @@
 
 import Contents from "@/components/Contents";
 import PlaceholderImage from "@/components/PlaceholderImage";
-import { Sheet, styled } from "@mui/joy";
+import { Button, Sheet, Stack, styled } from "@mui/joy";
+import { IconAi, IconChartBarPopular, IconSparkles } from "@tabler/icons-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 const TopBar = styled(Sheet)`
@@ -22,11 +25,35 @@ const ProfileImage = styled(PlaceholderImage)`
 `;
 
 const ClientLayout = ({ children }: PropsWithChildren) => {
+  const pathname = usePathname();
+
   return (
     <>
       <TopBar>
         <Contents>
-          <ProfileImage h={64} w={64} alt="profile" />
+          <Stack direction="row" spacing={2} justifyContent="space-between">
+            <Link href="/dashboard">
+              <ProfileImage h={64} w={64} alt="profile" />
+            </Link>
+            {pathname.includes("stock") ? (
+              <Button
+                component={Link}
+                href="/dashboard"
+                startDecorator={<IconChartBarPopular />}
+                variant="plain"
+              >
+                보유/관심 종목
+              </Button>
+            ) : (
+              <Button
+                component="a"
+                href="/stock"
+                startDecorator={<IconSparkles />}
+              >
+                AI 리포트
+              </Button>
+            )}
+          </Stack>
         </Contents>
       </TopBar>
       {children}

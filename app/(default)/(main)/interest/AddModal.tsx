@@ -1,3 +1,4 @@
+import StockSelect from "@/components/StockSelect";
 import { MockStockInterestResponse } from "@/types/StockInterest";
 import {
   MOCK_STOCK_OPTIONS,
@@ -76,39 +77,9 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
             <Stack spacing={4} minHeight="100%">
               <FormControl>
                 <FormLabel>종목명/코드</FormLabel>
-                <Autocomplete
-                  required
+                <StockSelect
                   value={selectedStock}
-                  onChange={(_, newValue) => setSelectedStock(newValue)}
-                  options={MOCK_STOCK_OPTIONS}
-                  getOptionLabel={(option) => option.name}
-                  filterOptions={(options, params) => {
-                    const filtered = options.filter(
-                      (option) =>
-                        option.name
-                          .toLocaleLowerCase()
-                          .includes(params.inputValue.toLocaleLowerCase()) ||
-                        option.code
-                          .toLocaleLowerCase()
-                          .includes(params.inputValue.toLocaleLowerCase())
-                    );
-                    return filtered;
-                  }}
-                  renderOption={(props, option) => (
-                    <AutocompleteOption {...props}>
-                      <ListItemContent>
-                        <Typography sx={{ display: "inline" }}>
-                          {option.name}
-                        </Typography>{" "}
-                        <Typography
-                          sx={{ display: "inline" }}
-                          textColor={"text.tertiary"}
-                        >
-                          {option.code}
-                        </Typography>
-                      </ListItemContent>
-                    </AutocompleteOption>
-                  )}
+                  onChange={(newValue) => setSelectedStock(newValue)}
                   size="lg"
                 />
                 <div style={{ height: "0.5rem" }} />

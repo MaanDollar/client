@@ -24,7 +24,7 @@ interface Props {
   portfolio: MockStockResponse[];
 }
 
-const ProtfolioSummary = ({ portfolio }: Props) => {
+const PortfolioSummary = ({ portfolio }: Props) => {
   const [flag, setFlag] = useState(false);
 
   const total = portfolio.reduce((acc, stock) => {
@@ -202,4 +202,4 @@ const ProtfolioSummary = ({ portfolio }: Props) => {
   );
 };
 
-export default ProtfolioSummary;
+export default PortfolioSummary;
