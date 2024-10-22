@@ -42,9 +42,14 @@ const ProtfolioSummary = ({ portfolio }: Props) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const sortedPortfolio = useMemo(() => {
+    return [...portfolio].sort(
+      (a, b) => b.priceCurrent * b.amount - a.priceCurrent * a.amount
+    );
+  }, [portfolio]);
+
   const pieChartItems = useMemo(() => {
-    return portfolio
-      .sort((a, b) => b.priceCurrent * b.amount - a.priceCurrent * a.amount)
+    return sortedPortfolio
       .map((stock) => ({
         id: stock.code,
         value: stock.priceCurrent * stock.amount,
@@ -141,7 +146,7 @@ const ProtfolioSummary = ({ portfolio }: Props) => {
               minWidth: 0,
             }}
           >
-            {portfolio.slice(0, 5).map((stock) => (
+            {sortedPortfolio.slice(0, 5).map((stock) => (
               <ChartLegendRow
                 key={stock.code}
                 direction="row"
