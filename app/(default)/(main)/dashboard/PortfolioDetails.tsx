@@ -77,7 +77,7 @@ const PortfolioDetails = ({
   const sortedPortfolio = useMemo(() => {
     const sorted = portfolio.sort((a, b) => {
       if (sortColumn === "name") {
-        return a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name, "ko");
       }
       if (sortColumn === "profit") {
         return (
