@@ -57,7 +57,7 @@ const PortfolioSummary = ({ portfolio }: Props) => {
         color: stock.color,
       }))
       .sort((a, b) => b.value - a.value);
-  }, [portfolio]);
+  }, [sortedPortfolio]);
 
   const getArcLabel = (params: DefaultizedPieValueType) => {
     const percent = params.value / total;

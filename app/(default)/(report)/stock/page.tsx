@@ -1,5 +1,5 @@
 import { MOCK_STOCK_OPTIONS } from "@/types/StockTemplate";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 const Page = () => {
   return redirect(

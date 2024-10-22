@@ -1,14 +1,10 @@
 "use client";
 
 import Contents from "@/components/Contents";
-import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
-import { List, ListItem, Stack, Typography } from "@mui/joy";
-import { useRouter } from "next/navigation";
-import Header from "./Header";
+import { MockStockTemplateResponse } from "@/types/StockTemplate";
+import { Stack, Typography } from "@mui/joy";
 import { Divider } from "@mui/material";
+import Header from "./Header";
 import Newsroom from "./Newsroom";
 
 interface Props {

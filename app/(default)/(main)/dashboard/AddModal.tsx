@@ -1,19 +1,13 @@
 import NumericFormatAdapter from "@/components/NumericFormatAdapter";
 import StockSelect from "@/components/StockSelect";
 import { MockStockResponse } from "@/types/Stock";
+import { MockStockTemplateResponse } from "@/types/StockTemplate";
 import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
-import {
-  Autocomplete,
-  AutocompleteOption,
   Button,
   DialogTitle,
   FormControl,
   FormLabel,
   Input,
-  ListItemContent,
   Modal,
   ModalClose,
   ModalDialog,

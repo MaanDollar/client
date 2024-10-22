@@ -3,7 +3,7 @@
 import Contents from "@/components/Contents";
 import PlaceholderImage from "@/components/PlaceholderImage";
 import { Button, Sheet, Stack, styled } from "@mui/joy";
-import { IconAi, IconChartBarPopular, IconSparkles } from "@tabler/icons-react";
+import { IconChartBarPopular, IconSparkles } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";

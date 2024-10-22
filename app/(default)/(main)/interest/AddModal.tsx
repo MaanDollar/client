@@ -1,17 +1,11 @@
 import StockSelect from "@/components/StockSelect";
 import { MockStockInterestResponse } from "@/types/StockInterest";
+import { MockStockTemplateResponse } from "@/types/StockTemplate";
 import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
-import {
-  Autocomplete,
-  AutocompleteOption,
   Button,
   DialogTitle,
   FormControl,
   FormLabel,
-  ListItemContent,
   Modal,
   ModalClose,
   ModalDialog,

@@ -1,13 +1,12 @@
 import { MockStockResponse } from "@/types/Stock";
-import { MockStockInterestResponse } from "@/types/StockInterest";
 import {
   Button,
+  DialogContent,
   DialogTitle,
   Modal,
   ModalClose,
   ModalDialog,
   Stack,
-  DialogContent,
 } from "@mui/joy";
 import { ko } from "k-popo";
 
