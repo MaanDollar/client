@@ -1,20 +1,30 @@
 "use client";
 
 import Contents from "@/components/Contents";
-import { MOCK_STOCK_PORTFOLIO } from "@/types/Stock";
-import { useMemo } from "react";
-import ProtfolioSummary from "./PortfolioSummary";
-import PortfolioDetails from "./PortfolioDetails";
+import { MOCK_STOCK_PORTFOLIO, MockStockResponse } from "@/types/Stock";
 import { Divider } from "@mui/joy";
+import { useState } from "react";
+import AddModal from "./AddModal";
+import PortfolioDetails from "./PortfolioDetails";
+import ProtfolioSummary from "./PortfolioSummary";
+import EditModal from "./EditModal";
 
 const Page = () => {
-  const portfolio = useMemo(
-    () =>
-      MOCK_STOCK_PORTFOLIO.sort((a, b) => {
-        return b.priceCurrent * b.amount - a.priceCurrent * a.amount;
-      }),
-    []
-  );
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalValue, setEditModalValue] =
+    useState<MockStockResponse | null>(null);
+  const [portfolio, setPortfolio] =
+    useState<MockStockResponse[]>(MOCK_STOCK_PORTFOLIO);
+
+  const handleOnAdd = (stock: MockStockResponse) => {
+    setPortfolio([...portfolio, stock]);
+  };
+
+  const handleOnEdit = (stock: MockStockResponse) => {
+    setPortfolio(
+      portfolio.map((item) => (item.code === stock.code ? stock : item))
+    );
+  };
 
   return (
     <>
@@ -24,8 +34,24 @@ const Page = () => {
         <div style={{ height: "1rem" }} />
         <Divider />
         <div style={{ height: "1rem" }} />
-        <PortfolioDetails portfolio={portfolio} />
+        <PortfolioDetails
+          portfolio={portfolio}
+          onAddModalOpen={() => setAddModalOpen(true)}
+          onEditModalOpen={(stock) => setEditModalValue(stock)}
+        />
+        <div style={{ height: "1rem" }} />
       </Contents>
+      <AddModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        onAdd={handleOnAdd}
+      />
+      <EditModal
+        open={!!editModalValue}
+        value={editModalValue}
+        onClose={() => setEditModalValue(null)}
+        onEdit={(stock) => handleOnEdit(stock)}
+      />
     </>
   );
 };

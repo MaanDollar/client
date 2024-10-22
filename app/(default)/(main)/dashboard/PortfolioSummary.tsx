@@ -44,6 +44,7 @@ const ProtfolioSummary = ({ portfolio }: Props) => {
 
   const pieChartItems = useMemo(() => {
     return portfolio
+      .sort((a, b) => b.priceCurrent * b.amount - a.priceCurrent * a.amount)
       .map((stock) => ({
         id: stock.code,
         value: stock.priceCurrent * stock.amount,

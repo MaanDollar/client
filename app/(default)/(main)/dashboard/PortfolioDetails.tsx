@@ -3,7 +3,8 @@
 import Centering from "@/components/Centering";
 import { MockStockResponse } from "@/types/Stock";
 import styled from "@emotion/styled";
-import { Table, Typography } from "@mui/joy";
+import { Table, Typography, Button, Stack } from "@mui/joy";
+import { IconPencil, IconPlus } from "@tabler/icons-react";
 import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 
 type SortColumn =
@@ -52,9 +53,15 @@ const HeaderCell = ({
 
 interface Props {
   portfolio: MockStockResponse[];
+  onAddModalOpen: () => void;
+  onEditModalOpen: (stock: MockStockResponse) => void;
 }
 
-const PortfolioDetails = ({ portfolio }: Props) => {
+const PortfolioDetails = ({
+  portfolio,
+  onAddModalOpen,
+  onEditModalOpen,
+}: Props) => {
   const [sortColumn, setSortColumn] = useState<SortColumn>("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -123,17 +130,26 @@ const PortfolioDetails = ({ portfolio }: Props) => {
 
   if (portfolio.length === 0) {
     return (
-      <Centering>
-        <Typography level="body-sm" textColor="text.tertiary">
-          주식을 추가해주세요.
-        </Typography>
+      <Centering sx={{ padding: "2rem 0" }}>
+        <Button startDecorator={<IconPlus />} onClick={onAddModalOpen}>
+          보유 종목 추가
+        </Button>
       </Centering>
     );
   }
 
   return (
     <>
-      <Typography level="title-lg">보유 잔고</Typography>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography level="title-lg">보유 잔고</Typography>
+        <Button
+          startDecorator={<IconPlus />}
+          variant="outlined"
+          onClick={onAddModalOpen}
+        >
+          추가
+        </Button>
+      </Stack>
       <div style={{ height: "1rem" }} />
       <TableContainer>
         <Table
@@ -142,6 +158,7 @@ const PortfolioDetails = ({ portfolio }: Props) => {
               position: "sticky",
               left: 0,
               background: theme.palette.background.surface,
+              width: "8rem",
             },
             "& *:is(td, th)": {
               width: minWidth,
@@ -153,7 +170,10 @@ const PortfolioDetails = ({ portfolio }: Props) => {
             "& tr:nth-of-type(2n) > *:is(td, th)": {
               paddingTop: 0,
             },
-            "& tr:nth-of-type(2n + 1) > *:is(td, th)": {
+            "& tr:nth-last-of-type(2) > *:is(td:last-child)": {
+              borderBottom: "none",
+            },
+            "& tr:nth-of-type(2n + 1) > *:is(td, th):not(td:last-child)": {
               borderBottom: "none",
               paddingBottom: 0,
             },
@@ -189,6 +209,7 @@ const PortfolioDetails = ({ portfolio }: Props) => {
               >
                 매입단가
               </HeaderCell>
+              <th>수정</th>
             </tr>
             <tr>
               <th></th>
@@ -213,6 +234,7 @@ const PortfolioDetails = ({ portfolio }: Props) => {
               >
                 현재가
               </HeaderCell>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -243,6 +265,14 @@ const PortfolioDetails = ({ portfolio }: Props) => {
                   </td>
                   <td>{stock.amount.toLocaleString()}</td>
                   <td>{stock.priceBought.toLocaleString()}</td>
+                  <td rowSpan={2}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => onEditModalOpen(stock)}
+                    >
+                      <IconPencil />
+                    </Button>
+                  </td>
                 </tr>
                 <tr>
                   <td></td>

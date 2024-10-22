@@ -16,6 +16,24 @@ const theme = extendTheme({
     body: defaultFont,
     display: defaultFont,
   },
+  components: {
+    JoyModal: {
+      styleOverrides: {
+        root: {
+          width: `${(100 / 4) * 3}vh`,
+          maxWidth: "100%",
+          left: "50% !important",
+          transform: "translateX(-50%) !important",
+          right: "unset",
+        },
+      },
+    },
+    JoyModalDialog: {
+      defaultProps: {
+        layout: "fullscreen",
+      },
+    },
+  },
 });
 
 const Container = styled("div")`
@@ -31,10 +49,10 @@ const Container = styled("div")`
 
 const ClientLayout = ({ children }: PropsWithChildren) => {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
-        <CssVarsProvider>
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+      <CssVarsProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Global
             styles={{
               html: {
@@ -48,9 +66,9 @@ const ClientLayout = ({ children }: PropsWithChildren) => {
             }}
           />
           <Container>{children}</Container>
-        </CssVarsProvider>
-      </MaterialCssVarsProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </CssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 };
 
