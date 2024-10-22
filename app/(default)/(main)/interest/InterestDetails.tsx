@@ -2,19 +2,13 @@
 
 import Centering from "@/components/Centering";
 import { MockStockResponse } from "@/types/Stock";
+import { MockStockInterestResponse } from "@/types/StockInterest";
 import styled from "@emotion/styled";
 import { Table, Typography, Button, Stack } from "@mui/joy";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { Fragment, PropsWithChildren, useMemo, useState } from "react";
 
-type SortColumn =
-  | "name"
-  | "profit"
-  | "profitRate"
-  | "amount"
-  | "amountTotal"
-  | "priceBought"
-  | "priceCurrent";
+type SortColumn = "name" | "priceCurrent" | "priceYesterday" | "priceChange";
 
 const TableContainer = styled("div")`
   overflow-x: auto;
@@ -52,16 +46,14 @@ const HeaderCell = ({
 };
 
 interface Props {
-  portfolio: MockStockResponse[];
+  interest: MockStockInterestResponse[];
   onAddModalOpen: () => void;
-  onEditModalOpen: (stock: MockStockResponse) => void;
-  onDeleteModalOpen: (stock: MockStockResponse) => void;
+  onDeleteModalOpen: (stock: MockStockInterestResponse) => void;
 }
 
-const PortfolioDetails = ({
-  portfolio,
+const InterestDetails = ({
+  interest,
   onAddModalOpen,
-  onEditModalOpen,
   onDeleteModalOpen,
 }: Props) => {
   const [sortColumn, setSortColumn] = useState<SortColumn>("name");
@@ -77,33 +69,22 @@ const PortfolioDetails = ({
   };
 
   const sortedPortfolio = useMemo(() => {
-    const sorted = portfolio.sort((a, b) => {
+    const sorted = interest.sort((a, b) => {
       if (sortColumn === "name") {
         return a.name.localeCompare(b.name, "ko");
       }
-      if (sortColumn === "profit") {
-        return (
-          (b.priceCurrent - b.priceBought) * b.amount -
-          (a.priceCurrent - a.priceBought) * a.amount
-        );
-      }
-      if (sortColumn === "profitRate") {
-        return (
-          (b.priceCurrent - b.priceBought) / b.priceBought -
-          (a.priceCurrent - a.priceBought) / a.priceBought
-        );
-      }
-      if (sortColumn === "amount") {
-        return b.amount - a.amount;
-      }
-      if (sortColumn === "amountTotal") {
-        return b.priceCurrent * b.amount - a.priceCurrent * a.amount;
-      }
-      if (sortColumn === "priceBought") {
-        return b.priceBought - a.priceBought;
-      }
       if (sortColumn === "priceCurrent") {
         return b.priceCurrent - a.priceCurrent;
+      }
+      if (sortColumn === "priceYesterday") {
+        return b.priceYesterday - a.priceYesterday;
+      }
+      if (sortColumn === "priceChange") {
+        return (
+          b.priceCurrent / b.priceYesterday -
+          1 -
+          (a.priceCurrent / a.priceYesterday - 1)
+        );
       }
       return 0;
     });
@@ -111,30 +92,29 @@ const PortfolioDetails = ({
       return sorted.reverse();
     }
     return sorted;
-  }, [portfolio, sortColumn, sortDirection]);
+  }, [interest, sortColumn, sortDirection]);
 
   const maxAmountDigitLength = useMemo(
     () =>
-      portfolio.reduce(
+      interest.reduce(
         (a, b) =>
           Math.max(
             a,
-            (b.priceCurrent * b.amount).toString().length,
-            (b.priceBought * b.amount).toString().length,
-            ((b.priceCurrent - b.priceBought) * b.amount).toString().length
+            b.priceCurrent.toString().length,
+            b.priceYesterday.toString().length
           ),
         0
       ),
-    [portfolio]
+    [interest]
   );
 
   const minWidth = Math.max(6, maxAmountDigitLength) * 0.75 + "rem";
 
-  if (portfolio.length === 0) {
+  if (interest.length === 0) {
     return (
       <Centering sx={{ padding: "2rem 0" }}>
         <Button startDecorator={<IconPlus />} onClick={onAddModalOpen}>
-          보유 종목 추가
+          관심종목 추가
         </Button>
       </Centering>
     );
@@ -143,7 +123,7 @@ const PortfolioDetails = ({
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography level="title-lg">보유 잔고</Typography>
+        <Typography level="title-lg">관심종목</Typography>
         <Button
           startDecorator={<IconPlus />}
           variant="outlined"
@@ -162,25 +142,12 @@ const PortfolioDetails = ({
               background: theme.palette.background.surface,
               width: "8rem",
             },
-            "& *:is(th):last-child": {
-              width: "8rem",
-            },
             "& *:is(td, th)": {
               width: minWidth,
             },
             "& tr > *:not(:first-child)": {
               textAlign: "right",
               fontFeatureSettings: "'tnum'",
-            },
-            "& tr:nth-of-type(2n) > *:is(td, th)": {
-              paddingTop: 0,
-            },
-            "& tr:nth-last-of-type(2) > *:is(td:last-child)": {
-              borderBottom: "none",
-            },
-            "& tr:nth-of-type(2n + 1) > *:is(td, th):not(td:last-child)": {
-              borderBottom: "none",
-              paddingBottom: 0,
             },
           })}
         >
@@ -194,52 +161,27 @@ const PortfolioDetails = ({
                 종목
               </HeaderCell>
               <HeaderCell
-                column="profit"
-                current={sortColumn === "profit" ? sortDirection : null}
-                setSortColumn={handleSortChange}
-              >
-                평가손익
-              </HeaderCell>
-              <HeaderCell
-                column="amount"
-                current={sortColumn === "amount" ? sortDirection : null}
-                setSortColumn={handleSortChange}
-              >
-                보유수량
-              </HeaderCell>
-              <HeaderCell
-                column="priceBought"
-                current={sortColumn === "priceBought" ? sortDirection : null}
-                setSortColumn={handleSortChange}
-              >
-                매입단가
-              </HeaderCell>
-              <th>수정</th>
-            </tr>
-            <tr>
-              <th></th>
-              <HeaderCell
-                column="profitRate"
-                current={sortColumn === "profitRate" ? sortDirection : null}
-                setSortColumn={handleSortChange}
-              >
-                수익률
-              </HeaderCell>
-              <HeaderCell
-                column="amountTotal"
-                current={sortColumn === "amountTotal" ? sortDirection : null}
-                setSortColumn={handleSortChange}
-              >
-                평가금액
-              </HeaderCell>
-              <HeaderCell
                 column="priceCurrent"
                 current={sortColumn === "priceCurrent" ? sortDirection : null}
                 setSortColumn={handleSortChange}
               >
                 현재가
               </HeaderCell>
-              <th></th>
+              <HeaderCell
+                column="priceYesterday"
+                current={sortColumn === "priceYesterday" ? sortDirection : null}
+                setSortColumn={handleSortChange}
+              >
+                전일가
+              </HeaderCell>
+              <HeaderCell
+                column="priceChange"
+                current={sortColumn === "priceChange" ? sortDirection : null}
+                setSortColumn={handleSortChange}
+              >
+                전일대비
+              </HeaderCell>
+              <th>삭제</th>
             </tr>
           </thead>
           <tbody>
@@ -255,55 +197,34 @@ const PortfolioDetails = ({
                     <Typography
                       level="body-sm"
                       color={
-                        stock.priceCurrent - stock.priceBought > 0
+                        stock.priceCurrent - stock.priceYesterday > 0
                           ? "danger"
-                          : stock.priceCurrent - stock.priceBought < 0
+                          : stock.priceCurrent - stock.priceYesterday < 0
                           ? "primary"
                           : undefined
                       }
                     >
-                      {(
-                        (stock.priceCurrent - stock.priceBought) *
-                        stock.amount
-                      ).toLocaleString()}
+                      {stock.priceCurrent.toLocaleString()}
                     </Typography>
                   </td>
-                  <td>{stock.amount.toLocaleString()}</td>
-                  <td>{stock.priceBought.toLocaleString()}</td>
-                  <td rowSpan={2} style={{ textAlign: "center" }}>
-                    <Stack direction="row">
-                      <Button
-                        variant="outlined"
-                        onClick={() => onEditModalOpen(stock)}
-                      >
-                        <IconPencil />
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        onClick={() => onDeleteModalOpen(stock)}
-                        color="danger"
-                      >
-                        <IconTrash />
-                      </Button>
-                    </Stack>
+                  <td>
+                    <Typography level="body-sm">
+                      {stock.priceYesterday.toLocaleString()}
+                    </Typography>
                   </td>
-                </tr>
-                <tr>
-                  <td></td>
                   <td>
                     <Typography
                       level="body-sm"
                       color={
-                        stock.priceCurrent - stock.priceBought > 0
+                        stock.priceCurrent - stock.priceYesterday > 0
                           ? "danger"
-                          : stock.priceCurrent - stock.priceBought < 0
+                          : stock.priceCurrent - stock.priceYesterday < 0
                           ? "primary"
                           : undefined
                       }
                     >
                       {(
-                        ((stock.priceCurrent - stock.priceBought) /
-                          stock.priceBought) *
+                        (stock.priceCurrent / stock.priceYesterday - 1) *
                         100
                       ).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
@@ -313,9 +234,14 @@ const PortfolioDetails = ({
                     </Typography>
                   </td>
                   <td>
-                    {(stock.priceCurrent * stock.amount).toLocaleString()}
+                    <Button
+                      variant="outlined"
+                      onClick={() => onDeleteModalOpen(stock)}
+                      color="danger"
+                    >
+                      <IconTrash />
+                    </Button>
                   </td>
-                  <td>{stock.priceCurrent.toLocaleString()}</td>
                 </tr>
               </Fragment>
             ))}
@@ -326,4 +252,4 @@ const PortfolioDetails = ({
   );
 };
 
-export default PortfolioDetails;
+export default InterestDetails;

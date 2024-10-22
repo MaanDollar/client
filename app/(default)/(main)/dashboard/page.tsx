@@ -8,10 +8,13 @@ import AddModal from "./AddModal";
 import PortfolioDetails from "./PortfolioDetails";
 import ProtfolioSummary from "./PortfolioSummary";
 import EditModal from "./EditModal";
+import DeleteModal from "./DeleteModal";
 
 const Page = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalValue, setEditModalValue] =
+    useState<MockStockResponse | null>(null);
+  const [deleteModalValue, setDeleteModalValue] =
     useState<MockStockResponse | null>(null);
   const [portfolio, setPortfolio] =
     useState<MockStockResponse[]>(MOCK_STOCK_PORTFOLIO);
@@ -26,6 +29,10 @@ const Page = () => {
     );
   };
 
+  const handleOnDelete = (stock: MockStockResponse) => {
+    setPortfolio(portfolio.filter((item) => item.code !== stock.code));
+  };
+
   return (
     <>
       <Contents>
@@ -38,6 +45,7 @@ const Page = () => {
           portfolio={portfolio}
           onAddModalOpen={() => setAddModalOpen(true)}
           onEditModalOpen={(stock) => setEditModalValue(stock)}
+          onDeleteModalOpen={(stock) => setDeleteModalValue(stock)}
         />
         <div style={{ height: "1rem" }} />
       </Contents>
@@ -51,6 +59,12 @@ const Page = () => {
         value={editModalValue}
         onClose={() => setEditModalValue(null)}
         onEdit={(stock) => handleOnEdit(stock)}
+      />
+      <DeleteModal
+        open={!!deleteModalValue}
+        value={deleteModalValue}
+        onClose={() => setDeleteModalValue(null)}
+        onDelete={(stock) => handleOnDelete(stock)}
       />
     </>
   );

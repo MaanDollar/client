@@ -2312,6 +2312,11 @@ json5@^1.0.2:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
+k-popo@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/k-popo/-/k-popo-2.0.5.tgz#83a2511f7db743d74d409e3ecd63b08cc2ded2b6"
+  integrity sha512-lA1FBMT25Yxa9acmTe2INoKURAK3vv/uxtnsyFCGF5dmY0syMQ0QA5TgBC4dx6puZg/0XSA6uXjbEv8H/Qe9Ew==
+
 keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"

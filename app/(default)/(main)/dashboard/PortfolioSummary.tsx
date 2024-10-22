@@ -96,99 +96,103 @@ const ProtfolioSummary = ({ portfolio }: Props) => {
               }}
             />
             원<br />
-            <small>
-              <NumberFlow
-                value={flag ? ((total - totalBought) / totalBought) * 100 : 0}
-                format={{
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }}
-                style={{
-                  fontFeatureSettings: "'tnum'",
-                }}
-              />
-              %
-            </small>
-          </Typography>
-        </Stack>
-      </Stack>
-      <Stack direction="row" alignItems="center">
-        <ChartContainer>
-          <PieChart
-            series={[
-              {
-                data: pieChartItems,
-                arcLabel: getArcLabel,
-              },
-            ]}
-            slotProps={{
-              legend: { hidden: true },
-            }}
-            sx={{
-              [`& .${pieArcLabelClasses.root}`]: {
-                fill: "white",
-                fontSize: 14,
-              },
-            }}
-          />
-        </ChartContainer>
-        <Stack
-          sx={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        >
-          {portfolio.slice(0, 5).map((stock) => (
-            <ChartLegendRow
-              key={stock.code}
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={1}
-                sx={{
-                  flex: 1,
-                  minWidth: 0,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: "0.5rem",
-                    height: "0.5rem",
-                    bgcolor: stock.color,
-                  }}
-                />
-                <Typography
-                  level="body-sm"
-                  noWrap
-                  sx={{
-                    flex: 1,
-                    minWidth: 0,
-                  }}
-                >
-                  {stock.name}
-                </Typography>
-              </Stack>
-              <Typography level="body-sm" noWrap>
+            {totalBought !== 0 && (
+              <small>
                 <NumberFlow
-                  value={((stock.priceCurrent * stock.amount) / total) * 100}
+                  value={flag ? ((total - totalBought) / totalBought) * 100 : 0}
                   format={{
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1,
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
                   }}
                   style={{
                     fontFeatureSettings: "'tnum'",
                   }}
                 />
                 %
-              </Typography>
-            </ChartLegendRow>
-          ))}
+              </small>
+            )}
+          </Typography>
         </Stack>
       </Stack>
+      {totalBought !== 0 && (
+        <Stack direction="row" alignItems="center">
+          <ChartContainer>
+            <PieChart
+              series={[
+                {
+                  data: pieChartItems,
+                  arcLabel: getArcLabel,
+                },
+              ]}
+              slotProps={{
+                legend: { hidden: true },
+              }}
+              sx={{
+                [`& .${pieArcLabelClasses.root}`]: {
+                  fill: "white",
+                  fontSize: 14,
+                },
+              }}
+            />
+          </ChartContainer>
+          <Stack
+            sx={{
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            {portfolio.slice(0, 5).map((stock) => (
+              <ChartLegendRow
+                key={stock.code}
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={1}
+                  sx={{
+                    flex: 1,
+                    minWidth: 0,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "0.5rem",
+                      height: "0.5rem",
+                      bgcolor: stock.color,
+                    }}
+                  />
+                  <Typography
+                    level="body-sm"
+                    noWrap
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                  >
+                    {stock.name}
+                  </Typography>
+                </Stack>
+                <Typography level="body-sm" noWrap>
+                  <NumberFlow
+                    value={((stock.priceCurrent * stock.amount) / total) * 100}
+                    format={{
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    }}
+                    style={{
+                      fontFeatureSettings: "'tnum'",
+                    }}
+                  />
+                  %
+                </Typography>
+              </ChartLegendRow>
+            ))}
+          </Stack>
+        </Stack>
+      )}
     </>
   );
 };

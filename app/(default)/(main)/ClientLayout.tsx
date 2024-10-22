@@ -1,9 +1,13 @@
 "use client";
 
 import { Tab, tabClasses, TabList, Tabs } from "@mui/joy";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
 
 const ClientLayout = ({ children }: PropsWithChildren) => {
+  const pathname = usePathname();
+
   return (
     <>
       <Tabs
@@ -27,10 +31,25 @@ const ClientLayout = ({ children }: PropsWithChildren) => {
             },
           },
         }}
+        value={pathname}
       >
         <TabList tabFlex={1}>
-          <Tab indicatorPlacement="top">보유종목</Tab>
-          <Tab indicatorPlacement="top">관심종목</Tab>
+          <Tab
+            component={Link}
+            indicatorPlacement="top"
+            value="/dashboard"
+            href="/dashboard"
+          >
+            보유종목
+          </Tab>
+          <Tab
+            component={Link}
+            indicatorPlacement="top"
+            value="/interest"
+            href="/interest"
+          >
+            관심종목
+          </Tab>
         </TabList>
       </Tabs>
       {children}
