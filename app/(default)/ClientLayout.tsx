@@ -12,6 +12,7 @@ const TopBar = styled(Sheet)`
   width: 100%;
   padding: 0.5rem 0;
   background-color: ${({ theme }) => theme.palette.background.body};
+  z-index: 1000;
 `;
 
 const ProfileImage = styled(PlaceholderImage)`
