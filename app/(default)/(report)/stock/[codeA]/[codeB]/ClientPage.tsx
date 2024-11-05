@@ -2,8 +2,7 @@
 
 import Contents from "@/components/Contents";
 import { MockStockTemplateResponse } from "@/types/StockTemplate";
-import { Stack, Typography } from "@mui/joy";
-import { Divider } from "@mui/material";
+import { Card, Stack, Typography } from "@mui/joy";
 import Header from "./Header";
 import Newsroom from "./Newsroom";
 
@@ -20,26 +19,24 @@ const ClientPage = ({ stockA, stockB }: Props) => {
       <div style={{ height: "1rem" }} />
       <Header stockA={stockA} stockB={stockB} />
       <div style={{ height: "1rem" }} />
-      <Divider />
-      <div style={{ height: "1rem" }} />
-      <Stack direction="row" justifyContent="space-between">
-        <Typography level="title-lg">상관계수</Typography>
-        <Typography
-          level="title-lg"
-          sx={{ fontSize: "3rem" }}
-          color={
-            mockRelationCoeff < 0
-              ? "primary"
-              : mockRelationCoeff > 0
-              ? "danger"
-              : undefined
-          }
-        >
-          {mockRelationCoeff}
-        </Typography>
-      </Stack>
-      <div style={{ height: "1rem" }} />
-      <Divider />
+      <Card sx={{ bgcolor: "white" }}>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography level="title-lg">상관계수</Typography>
+          <Typography
+            level="title-lg"
+            sx={{ fontSize: "3rem" }}
+            color={
+              mockRelationCoeff < 0
+                ? "primary"
+                : mockRelationCoeff > 0
+                ? "danger"
+                : undefined
+            }
+          >
+            {mockRelationCoeff}
+          </Typography>
+        </Stack>
+      </Card>
       <div style={{ height: "1rem" }} />
       <Newsroom />
     </Contents>
