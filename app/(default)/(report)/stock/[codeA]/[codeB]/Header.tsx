@@ -40,6 +40,7 @@ const Header = ({ stockA, stockB }: Props) => {
     <>
       <Stack direction="row" spacing={4} sx={{ width: "100%" }}>
         <Stack spacing={2} sx={{ minWidth: 0 }} flex="1">
+          <Typography level="title-lg">보유/관심 종목</Typography>
           <StockSelectFromKnown
             value={stockA}
             onChange={(value) => {
@@ -96,6 +97,7 @@ const Header = ({ stockA, stockB }: Props) => {
           />
         </Stack>
         <Stack spacing={2} sx={{ minWidth: 0 }} flex="1">
+          <Typography level="title-lg">AI 추천 관련 종목</Typography>
           <StockSelect
             value={stockB}
             allowedCodes={availableOptions}

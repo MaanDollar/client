@@ -12,8 +12,7 @@ import { useState, useEffect, useMemo } from "react";
 
 const ChartContainer = styled("div")`
   width: 50%;
-  max-width: 12rem;
-  aspect-ratio: 1;
+  height: 16rem;
 `;
 
 const ChartLegendRow = styled(Stack)`
@@ -123,6 +122,7 @@ const PortfolioSummary = ({ portfolio }: Props) => {
         <Stack direction="row" alignItems="center">
           <ChartContainer>
             <PieChart
+              margin={{ right: 60 }}
               series={[
                 {
                   data: pieChartItems,

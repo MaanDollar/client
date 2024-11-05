@@ -122,59 +122,6 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
                   alignItems="center"
                 >
                   <FormLabel sx={{ alignSelf: "unset" }}>
-                    {amountInputMode === "amount" ? "보유 수량" : "보유 금액"}
-                  </FormLabel>
-                  <Button
-                    startDecorator={<IconRefresh />}
-                    onClick={() => {
-                      setAmountInputMode(
-                        amountInputMode === "amount" ? "total" : "amount"
-                      );
-                    }}
-                    variant="plain"
-                  >
-                    {amountInputMode === "amount" ? "금액" : "수량"}으로 입력
-                  </Button>
-                </Stack>
-                <Input
-                  required
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0"
-                  sx={{ width: "100%" }}
-                  size="lg"
-                  startDecorator={
-                    amountInputMode === "amount" ? undefined : "₩"
-                  }
-                  endDecorator={amountInputMode === "amount" ? "주" : "원"}
-                  slotProps={{
-                    input: {
-                      component: NumericFormatAdapter,
-                    },
-                  }}
-                />
-                {amountInputMode === "total" && (
-                  <>
-                    <div style={{ height: "0.5rem" }} />
-                    <Typography level="body-sm" textColor="text.tertiary">
-                      <NumberFlow
-                        value={amountRealInputValue}
-                        style={{
-                          fontFeatureSettings: "'tnum'",
-                        }}
-                      />
-                      주
-                    </Typography>
-                  </>
-                )}
-              </FormControl>
-              <FormControl>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <FormLabel sx={{ alignSelf: "unset" }}>
                     {boughtPriceInputMode === "price"
                       ? "매입 시 단가"
                       : "매입 시 총 금액"}
@@ -225,6 +172,59 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
                         }}
                       />
                       원
+                    </Typography>
+                  </>
+                )}
+              </FormControl>
+              <FormControl>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <FormLabel sx={{ alignSelf: "unset" }}>
+                    {amountInputMode === "amount" ? "보유 수량" : "보유 금액"}
+                  </FormLabel>
+                  <Button
+                    startDecorator={<IconRefresh />}
+                    onClick={() => {
+                      setAmountInputMode(
+                        amountInputMode === "amount" ? "total" : "amount"
+                      );
+                    }}
+                    variant="plain"
+                  >
+                    {amountInputMode === "amount" ? "금액" : "수량"}으로 입력
+                  </Button>
+                </Stack>
+                <Input
+                  required
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0"
+                  sx={{ width: "100%" }}
+                  size="lg"
+                  startDecorator={
+                    amountInputMode === "amount" ? undefined : "₩"
+                  }
+                  endDecorator={amountInputMode === "amount" ? "주" : "원"}
+                  slotProps={{
+                    input: {
+                      component: NumericFormatAdapter,
+                    },
+                  }}
+                />
+                {amountInputMode === "total" && (
+                  <>
+                    <div style={{ height: "0.5rem" }} />
+                    <Typography level="body-sm" textColor="text.tertiary">
+                      <NumberFlow
+                        value={amountRealInputValue}
+                        style={{
+                          fontFeatureSettings: "'tnum'",
+                        }}
+                      />
+                      주
                     </Typography>
                   </>
                 )}

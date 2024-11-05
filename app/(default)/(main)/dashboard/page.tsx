@@ -2,13 +2,13 @@
 
 import Contents from "@/components/Contents";
 import { MOCK_STOCK_PORTFOLIO, MockStockResponse } from "@/types/Stock";
-import { Divider } from "@mui/joy";
+import { Card } from "@mui/joy";
 import { useState } from "react";
 import AddModal from "./AddModal";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 import PortfolioDetails from "./PortfolioDetails";
 import PortfolioSummary from "./PortfolioSummary";
-import EditModal from "./EditModal";
-import DeleteModal from "./DeleteModal";
 
 const Page = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -37,9 +37,9 @@ const Page = () => {
     <>
       <Contents>
         <div style={{ height: "1rem" }} />
-        <PortfolioSummary portfolio={portfolio} />
-        <div style={{ height: "1rem" }} />
-        <Divider />
+        <Card sx={{ backgroundColor: "white" }}>
+          <PortfolioSummary portfolio={portfolio} />
+        </Card>
         <div style={{ height: "1rem" }} />
         <PortfolioDetails
           portfolio={portfolio}
