@@ -8,7 +8,7 @@ import {
 import { defaultFont } from "@/styles/font";
 import { Global, ThemeProvider } from "@emotion/react";
 import { CssBaseline, CssVarsProvider, extendTheme, styled } from "@mui/joy";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 const materialTheme = materialExtendTheme();
 const theme = extendTheme({
@@ -48,6 +48,13 @@ const Container = styled("div")`
 `;
 
 const ClientLayout = ({ children }: PropsWithChildren) => {
+  useEffect(() => {
+    if ("virtualKeyboard" in navigator) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (navigator as any).virtualKeyboard.overlaysContent = true;
+    }
+  }, []);
+
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <CssVarsProvider>
