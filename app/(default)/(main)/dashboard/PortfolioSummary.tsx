@@ -2,13 +2,11 @@
 
 import { MockStockResponse } from "@/types/Stock";
 import { Stack, Typography, Box, styled } from "@mui/joy";
-import {
-  DefaultizedPieValueType,
-  PieChart,
-  pieArcLabelClasses,
-} from "@mui/x-charts";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import NumberFlow from "@number-flow/react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 
 const ChartContainer = styled("div")`
   width: 50%;
@@ -25,6 +23,7 @@ interface Props {
 
 const PortfolioSummary = ({ portfolio }: Props) => {
   const [flag, setFlag] = useState(false);
+  const pieChartContainerRef = useRef<HTMLDivElement>(null);
 
   const total = portfolio.reduce((acc, stock) => {
     return acc + stock.priceCurrent * stock.amount;
@@ -58,13 +57,26 @@ const PortfolioSummary = ({ portfolio }: Props) => {
       .sort((a, b) => b.value - a.value);
   }, [sortedPortfolio]);
 
-  const getArcLabel = (params: DefaultizedPieValueType) => {
-    const percent = params.value / total;
-    if (percent < 0.1) {
-      return "";
-    }
-    return `${(percent * 100).toFixed(0)}%`;
-  };
+  useEffect(() => {
+    if (!pieChartContainerRef.current) return;
+    am4core.useTheme(am4themes_animated);
+    const chart = am4core.create(
+      pieChartContainerRef.current,
+      am4charts.PieChart3D
+    );
+    chart.hiddenState.properties.opacity = 0;
+    chart.data = pieChartItems;
+    const series = chart.series.push(new am4charts.PieSeries3D());
+    series.dataFields.value = "value";
+    series.dataFields.category = "label";
+    series.labels.template.disabled = true;
+    series.ticks.template.disabled = true;
+    series.colors.list = pieChartItems.map((item) => am4core.color(item.color));
+
+    return () => {
+      chart.dispose();
+    };
+  }, [pieChartItems]);
 
   return (
     <>
@@ -120,26 +132,7 @@ const PortfolioSummary = ({ portfolio }: Props) => {
       </Stack>
       {totalBought !== 0 && (
         <Stack direction="row" alignItems="center">
-          <ChartContainer>
-            <PieChart
-              margin={{ right: 60 }}
-              series={[
-                {
-                  data: pieChartItems,
-                  arcLabel: getArcLabel,
-                },
-              ]}
-              slotProps={{
-                legend: { hidden: true },
-              }}
-              sx={{
-                [`& .${pieArcLabelClasses.root}`]: {
-                  fill: "white",
-                  fontSize: 14,
-                },
-              }}
-            />
-          </ChartContainer>
+          <ChartContainer ref={pieChartContainerRef} />
           <Stack
             sx={{
               flex: 1,

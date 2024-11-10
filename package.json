@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.39",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^6.1.4",
-    "@mui/x-charts": "^7.21.0",
     "@number-flow/react": "^0.2.3",
     "@tabler/icons-react": "^3.19.0",
     "k-popo": "^2.0.5",

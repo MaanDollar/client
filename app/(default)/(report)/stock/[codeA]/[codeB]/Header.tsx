@@ -6,11 +6,19 @@ import {
   MOCK_STOCK_OPTIONS,
   MockStockTemplateResponse,
 } from "@/types/StockTemplate";
-import { Typography, useTheme } from "@mui/joy";
+import { styled, Typography } from "@mui/joy";
 import { Stack } from "@mui/material";
-import { SparkLineChart } from "@mui/x-charts";
 import NumberFlow from "@number-flow/react";
 import { useRouter } from "next/navigation";
+import Sparkline from "./Sparkline";
+
+const SpartlineContainer = styled("div")`
+  height: 100px;
+`;
+
+const COLOR_PRIMARY = "#0b6bcb";
+const COLOR_DANGER = "#e53e3e";
+const COLOR_TEXT_TERTIARY = "#6b7280";
 
 interface Props {
   stockA: MockStockTemplateResponse;
@@ -19,7 +27,6 @@ interface Props {
 
 const Header = ({ stockA, stockB }: Props) => {
   const router = useRouter();
-  const theme = useTheme();
 
   const availableOptions = MOCK_STOCK_OPTIONS.filter(
     (item) => item.code !== stockA.code
@@ -83,18 +90,18 @@ const Header = ({ stockA, stockB }: Props) => {
               %
             </small>
           </Typography>
-          <SparkLineChart
-            data={randomSparklineA}
-            height={100}
-            curve="natural"
-            colors={[
-              stockA.priceCurrent - stockA.priceYesterday > 0
-                ? theme.palette.danger.plainColor
-                : stockA.priceCurrent - stockA.priceYesterday < 0
-                ? theme.palette.primary.plainColor
-                : theme.palette.text.tertiary,
-            ]}
-          />
+          <SpartlineContainer>
+            <Sparkline
+              data={randomSparklineA}
+              color={
+                stockA.priceCurrent - stockA.priceYesterday > 0
+                  ? COLOR_DANGER
+                  : stockA.priceCurrent - stockA.priceYesterday < 0
+                  ? COLOR_PRIMARY
+                  : COLOR_TEXT_TERTIARY
+              }
+            />
+          </SpartlineContainer>
         </Stack>
         <Stack spacing={2} sx={{ minWidth: 0 }} flex="1">
           <Typography level="title-lg">AI 추천 관련 종목</Typography>
@@ -141,18 +148,18 @@ const Header = ({ stockA, stockB }: Props) => {
               %
             </small>
           </Typography>
-          <SparkLineChart
-            data={randomSparklineB}
-            height={100}
-            curve="natural"
-            colors={[
-              stockB.priceCurrent - stockB.priceYesterday > 0
-                ? theme.palette.danger.plainColor
-                : stockB.priceCurrent - stockB.priceYesterday < 0
-                ? theme.palette.primary.plainColor
-                : theme.palette.text.tertiary,
-            ]}
-          />
+          <SpartlineContainer>
+            <Sparkline
+              data={randomSparklineB}
+              color={
+                stockB.priceCurrent - stockB.priceYesterday > 0
+                  ? COLOR_DANGER
+                  : stockB.priceCurrent - stockB.priceYesterday < 0
+                  ? COLOR_PRIMARY
+                  : COLOR_TEXT_TERTIARY
+              }
+            />
+          </SpartlineContainer>
         </Stack>
       </Stack>
     </>

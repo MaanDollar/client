@@ -32,6 +32,7 @@ const ClientPage = ({ stockA, stockB }: Props) => {
                 ? "danger"
                 : undefined
             }
+            suppressHydrationWarning
           >
             {mockRelationCoeff}
           </Typography>
