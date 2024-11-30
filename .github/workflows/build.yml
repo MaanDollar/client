@@ -5,6 +5,7 @@ env:
   ECR_REPOSITORY: costock/client
   ECS_CLUSTER: costock-client-v1
   ECS_SERVICE: costock-client-v1
+  ECS_TASK_DEFINITION: costock-client
   DOCKERFILE: "./build.dockerfile"
 jobs:
   build-docker-image-dev:
@@ -79,7 +80,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ github.ref }}:client
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_SERVICE }} --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
       - name: Render Amazon ECS task definition
         id: render-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
