@@ -3,19 +3,18 @@
 import Centering from "@/components/Centering";
 import { Button, Stack, styled } from "@mui/joy";
 
-import imgKakao from "./kakao.png";
 import Image from "next/image";
 import Link from "next/link";
-import PlaceholderImage from "@/components/PlaceholderImage";
+import imgKakao from "./kakao.png";
 
 const LoginContainer = styled(Centering)`
   height: 100%;
 `;
 
-const LogoImage = styled(PlaceholderImage)`
+const LogoImage = styled("img")`
   display: block;
   width: 80%;
-  max-width: 16rem;
+  max-width: 12rem;
   height: auto;
 `;
 
@@ -28,7 +27,7 @@ const Page = () => {
         justifyContent="center"
         sx={{ width: "100%", height: "100%" }}
       >
-        <LogoImage w={640} h={480} alt="logo" />
+        <LogoImage src="/logo.svg" alt="logo" />
         <Button
           component={Link}
           href="/dashboard"
