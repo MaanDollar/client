@@ -4,7 +4,6 @@ import Centering from "@/components/Centering";
 import { Button, Stack, styled } from "@mui/joy";
 
 import Image from "next/image";
-import Link from "next/link";
 import imgKakao from "./kakao.png";
 
 const LoginContainer = styled(Centering)`
@@ -29,8 +28,8 @@ const Page = () => {
       >
         <LogoImage src="/logo.svg" alt="logo" />
         <Button
-          component={Link}
-          href="/dashboard"
+          component="a"
+          href="https://costockco.com/api/auth/kakao/login/?process=login"
           fullWidth
           sx={{
             px: 6,
