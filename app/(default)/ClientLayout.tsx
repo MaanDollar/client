@@ -1,7 +1,7 @@
 "use client";
 
 import Contents from "@/components/Contents";
-import PlaceholderImage from "@/components/PlaceholderImage";
+import { useUser } from "@/contexts/UserContext";
 import {
   Button,
   Sheet,
@@ -42,7 +42,7 @@ const BottomNav = styled(Sheet)`
   z-index: 1000;
 `;
 
-const ProfileImage = styled(PlaceholderImage)`
+const ProfileImage = styled("img")`
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
@@ -59,6 +59,7 @@ const resolveTabValue = (pathname: string) => {
 const ClientLayout = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
   const hasHistory = !/^\/(dashboard|interest)\/?/.test(pathname);
+  const { user } = useUser();
 
   return (
     <>
@@ -97,7 +98,9 @@ const ClientLayout = ({ children }: PropsWithChildren) => {
                   borderRadius: "50%",
                 }}
               >
-                <ProfileImage h={64} w={64} alt="profile" />
+                {user && user.profile_image && (
+                  <ProfileImage src={user.profile_image} alt="profile" />
+                )}
               </Button>
             </Stack>
             {pathname.includes("stock") ? (

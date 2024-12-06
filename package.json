@@ -16,6 +16,7 @@
     "@mui/material": "^6.1.4",
     "@number-flow/react": "^0.2.3",
     "@tabler/icons-react": "^3.19.0",
+    "axios": "^1.7.9",
     "k-popo": "^2.0.5",
     "next": "14.2.15",
     "react": "^18",
