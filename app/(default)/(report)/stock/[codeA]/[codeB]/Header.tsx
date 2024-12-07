@@ -3,6 +3,7 @@
 import StockSelect from "@/components/StockSelect";
 import StockSelectFromKnown from "@/components/StockSelectFromKnown";
 import { useSite } from "@/contexts/SiteContext";
+import { StockPriceResponse } from "@/types/StockPrice";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import { styled, Typography } from "@mui/joy";
 import { Stack } from "@mui/material";
@@ -21,9 +22,11 @@ const COLOR_TEXT_TERTIARY = "#6b7280";
 interface Props {
   stockA: StockTemplateResponse;
   stockB: StockTemplateResponse;
+  priceA: StockPriceResponse | null;
+  priceB: StockPriceResponse | null;
 }
 
-const Header = ({ stockA, stockB }: Props) => {
+const Header = ({ stockA, stockB, priceA, priceB }: Props) => {
   const { stocks } = useSite();
   const router = useRouter();
 
@@ -32,15 +35,6 @@ const Header = ({ stockA, stockB }: Props) => {
     .filter((item) => item.code !== stockA.code)
     .slice(0, 5)
     .map((item) => item.code);
-
-  const randomSparklineA = Array.from(
-    { length: 30 },
-    () => Math.random() * 100
-  );
-  const randomSparklineB = Array.from(
-    { length: 30 },
-    () => Math.random() * 100
-  );
 
   return (
     <>
@@ -91,7 +85,7 @@ const Header = ({ stockA, stockB }: Props) => {
           </Typography>
           <SpartlineContainer>
             <Sparkline
-              data={randomSparklineA}
+              price={priceA}
               color={
                 stockA.close - stockA.previous_close > 0
                   ? COLOR_DANGER
@@ -149,7 +143,7 @@ const Header = ({ stockA, stockB }: Props) => {
           </Typography>
           <SpartlineContainer>
             <Sparkline
-              data={randomSparklineB}
+              price={priceB}
               color={
                 stockB.close - stockB.previous_close > 0
                   ? COLOR_DANGER

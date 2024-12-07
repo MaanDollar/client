@@ -73,6 +73,7 @@ const StockSelectFromKnown = ({ value, onChange, ...rest }: Props) => {
           </ListItemContent>
         </AutocompleteOption>
       )}
+      isOptionEqualToValue={(option, value) => option.code === value?.code}
       {...rest}
     />
   );

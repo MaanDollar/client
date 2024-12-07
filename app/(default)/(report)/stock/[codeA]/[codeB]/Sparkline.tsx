@@ -1,27 +1,33 @@
 "use client";
 
-import * as am4core from "@amcharts/amcharts4/core";
+import { StockPriceResponse } from "@/types/StockPrice";
 import * as am4charts from "@amcharts/amcharts4/charts";
+import * as am4core from "@amcharts/amcharts4/core";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 interface Props {
-  data: number[];
   color?: string;
+  price: StockPriceResponse | null;
 }
 
-const Sparkline = ({ data, color }: Props) => {
+const Sparkline = ({ color, price }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const data = useMemo(() => {
+    if (!price) return [];
+    return price.close_prices.map((close_price, index) => ({
+      date: new Date(price.dates[index]),
+      value: close_price,
+    }));
+  }, [price]);
 
   useEffect(() => {
     if (!containerRef.current) return;
     am4core.useTheme(am4themes_animated);
     const chart = am4core.create(containerRef.current, am4charts.XYChart);
     chart.padding(0, 0, 0, 0);
-    chart.data = data.map((value, index) => ({
-      index,
-      value,
-    }));
+    chart.data = data;
 
     const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.grid.template.location = 0;
@@ -36,7 +42,7 @@ const Sparkline = ({ data, color }: Props) => {
     valueAxis.renderer.baseGrid.disabled = true;
 
     const series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.dateX = "index";
+    series.dataFields.dateX = "date";
     series.dataFields.valueY = "value";
     series.strokeWidth = 2;
     series.tensionX = 0.8;

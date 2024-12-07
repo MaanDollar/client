@@ -1,4 +1,4 @@
-import { listAllStocks } from "@/api/stock";
+import { listAllStocks, listPriceDetails } from "@/api/stock";
 import { notFound } from "next/navigation";
 import ClientPage from "./ClientPage";
 
@@ -22,7 +22,19 @@ const Page = async ({
   if (!stockA || !stockB) {
     return notFound();
   }
-  return <ClientPage stockA={stockA} stockB={stockB} />;
+
+  const [priceA, priceB] = await Promise.all([
+    listPriceDetails(stockA.code),
+    listPriceDetails(stockB.code),
+  ]);
+  return (
+    <ClientPage
+      stockA={stockA}
+      stockB={stockB}
+      priceA={priceA}
+      priceB={priceB}
+    />
+  );
 };
 
 export default Page;

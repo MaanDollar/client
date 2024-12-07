@@ -1,6 +1,7 @@
 import { ApiResponse } from "@/types/Api";
 import { StockOwnedResponse } from "@/types/Stock";
 import { StockInterestedResponse } from "@/types/StockInterest";
+import { StockPriceResponse } from "@/types/StockPrice";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import { axiosParams } from "@/utils/axios";
 import axios from "axios";
@@ -69,6 +70,21 @@ export const listInterest = cache(
         throw new Error(data.message);
       }
       return data.data.stocks;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+);
+
+export const listPriceDetails = cache(
+  async (code: string): Promise<StockPriceResponse | null> => {
+    try {
+      const { data } = await axios.get<StockPriceResponse>(
+        `/api/ai/price/${code}`,
+        axiosParams()
+      );
+      return data;
     } catch (e) {
       console.error(e);
       return null;
