@@ -9,10 +9,8 @@ import DeleteModal from "./DeleteModal";
 import EditModal from "./EditModal";
 import PortfolioDetails from "./PortfolioDetails";
 import PortfolioSummary from "./PortfolioSummary";
-import { useUser } from "@/contexts/UserContext";
 
 const Page = () => {
-  const user = useUser();
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalValue, setEditModalValue] =
     useState<MockStockResponse | null>(null);
@@ -38,7 +36,6 @@ const Page = () => {
   return (
     <>
       <Contents>
-        {JSON.stringify(user)}
         <div style={{ height: "1rem" }} />
         <Card sx={{ backgroundColor: "white" }}>
           <PortfolioSummary portfolio={portfolio} />
