@@ -1,7 +1,8 @@
 "use client";
 
 import Contents from "@/components/Contents";
-import { MOCK_STOCK_PORTFOLIO, MockStockResponse } from "@/types/Stock";
+import { useSite } from "@/contexts/SiteContext";
+import { StockOwnedResponseWithData } from "@/types/Stock";
 import { Card } from "@mui/joy";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,12 +14,12 @@ import PortfolioSummary from "./PortfolioSummary";
 
 const Page = () => {
   const router = useRouter();
+  const { portfolio } = useSite();
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalValue, setEditModalValue] =
-    useState<MockStockResponse | null>(null);
+    useState<StockOwnedResponseWithData | null>(null);
   const [deleteModalValue, setDeleteModalValue] =
-    useState<MockStockResponse | null>(null);
-  const portfolio = MOCK_STOCK_PORTFOLIO;
+    useState<StockOwnedResponseWithData | null>(null);
 
   const handleOnInvalidate = () => {
     router.refresh();
@@ -29,15 +30,17 @@ const Page = () => {
       <Contents>
         <div style={{ height: "1rem" }} />
         <Card sx={{ backgroundColor: "white" }}>
-          <PortfolioSummary portfolio={portfolio} />
+          {portfolio && <PortfolioSummary portfolio={portfolio} />}
         </Card>
         <div style={{ height: "1rem" }} />
-        <PortfolioDetails
-          portfolio={portfolio}
-          onAddModalOpen={() => setAddModalOpen(true)}
-          onEditModalOpen={(stock) => setEditModalValue(stock)}
-          onDeleteModalOpen={(stock) => setDeleteModalValue(stock)}
-        />
+        {portfolio && (
+          <PortfolioDetails
+            portfolio={portfolio}
+            onAddModalOpen={() => setAddModalOpen(true)}
+            onEditModalOpen={(stock) => setEditModalValue(stock)}
+            onDeleteModalOpen={(stock) => setDeleteModalValue(stock)}
+          />
+        )}
         <div style={{ height: "1rem" }} />
       </Contents>
       <AddModal

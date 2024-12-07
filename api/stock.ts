@@ -1,4 +1,5 @@
 import { ApiResponse } from "@/types/Api";
+import { StockOwnedResponse } from "@/types/Stock";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import { axiosParams } from "@/utils/axios";
 import axios from "axios";
@@ -29,6 +30,25 @@ export const listAllStocks = cache(
       stockCache = data.stocks;
       stockCachedAt = new Date();
       return data.stocks;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+);
+
+export const listPortfolio = cache(
+  async (): Promise<StockOwnedResponse[] | null> => {
+    try {
+      const { data } = await axios.get<
+        ApiResponse<{
+          data: { stocks: StockOwnedResponse[] };
+        }>
+      >("/api/stock/owned/list", axiosParams());
+      if (data.status === "error") {
+        throw new Error(data.message);
+      }
+      return data.data.stocks;
     } catch (e) {
       console.error(e);
       return null;

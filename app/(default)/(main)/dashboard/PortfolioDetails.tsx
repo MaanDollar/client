@@ -1,7 +1,7 @@
 "use client";
 
 import Centering from "@/components/Centering";
-import { MockStockResponse } from "@/types/Stock";
+import { StockOwnedResponseWithData } from "@/types/Stock";
 import styled from "@emotion/styled";
 import { Table, Typography, Button, Stack } from "@mui/joy";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
@@ -53,10 +53,10 @@ const HeaderCell = ({
 };
 
 interface Props {
-  portfolio: MockStockResponse[];
+  portfolio: StockOwnedResponseWithData[];
   onAddModalOpen: () => void;
-  onEditModalOpen: (stock: MockStockResponse) => void;
-  onDeleteModalOpen: (stock: MockStockResponse) => void;
+  onEditModalOpen: (stock: StockOwnedResponseWithData) => void;
+  onDeleteModalOpen: (stock: StockOwnedResponseWithData) => void;
 }
 
 const PortfolioDetails = ({
@@ -84,8 +84,8 @@ const PortfolioDetails = ({
       }
       if (sortColumn === "profit") {
         return (
-          (b.priceCurrent - b.priceBought) * b.amount -
-          (a.priceCurrent - a.priceBought) * a.amount
+          (b.priceCurrent - b.priceBought) * b.quantity -
+          (a.priceCurrent - a.priceBought) * a.quantity
         );
       }
       if (sortColumn === "profitRate") {
@@ -95,10 +95,10 @@ const PortfolioDetails = ({
         );
       }
       if (sortColumn === "amount") {
-        return b.amount - a.amount;
+        return b.quantity - a.quantity;
       }
       if (sortColumn === "amountTotal") {
-        return b.priceCurrent * b.amount - a.priceCurrent * a.amount;
+        return b.priceCurrent * b.quantity - a.priceCurrent * a.quantity;
       }
       if (sortColumn === "priceBought") {
         return b.priceBought - a.priceBought;
@@ -120,9 +120,9 @@ const PortfolioDetails = ({
         (a, b) =>
           Math.max(
             a,
-            (b.priceCurrent * b.amount).toString().length,
-            (b.priceBought * b.amount).toString().length,
-            ((b.priceCurrent - b.priceBought) * b.amount).toString().length
+            (b.priceCurrent * b.quantity).toString().length,
+            (b.priceBought * b.quantity).toString().length,
+            ((b.priceCurrent - b.priceBought) * b.quantity).toString().length
           ),
         0
       ),
@@ -274,11 +274,11 @@ const PortfolioDetails = ({
                     >
                       {(
                         (stock.priceCurrent - stock.priceBought) *
-                        stock.amount
+                        stock.quantity
                       ).toLocaleString()}
                     </Typography>
                   </td>
-                  <td>{stock.amount.toLocaleString()}</td>
+                  <td>{stock.quantity.toLocaleString()}</td>
                   <td>{stock.priceBought.toLocaleString()}</td>
                   <td rowSpan={2} style={{ textAlign: "center" }}>
                     <Stack direction="row">
@@ -323,7 +323,7 @@ const PortfolioDetails = ({
                     </Typography>
                   </td>
                   <td>
-                    {(stock.priceCurrent * stock.amount).toLocaleString()}
+                    {(stock.priceCurrent * stock.quantity).toLocaleString()}
                   </td>
                   <td>{stock.priceCurrent.toLocaleString()}</td>
                 </tr>

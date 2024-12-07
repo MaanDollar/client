@@ -1,12 +1,12 @@
 "use client";
 
-import { MockStockResponse } from "@/types/Stock";
-import { Stack, Typography, Box, styled } from "@mui/joy";
-import * as am4core from "@amcharts/amcharts4/core";
+import { StockOwnedResponseWithData } from "@/types/Stock";
 import * as am4charts from "@amcharts/amcharts4/charts";
+import * as am4core from "@amcharts/amcharts4/core";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { Box, Stack, styled, Typography } from "@mui/joy";
 import NumberFlow from "@number-flow/react";
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const ChartContainer = styled("div")`
   width: 50%;
@@ -18,7 +18,7 @@ const ChartLegendRow = styled(Stack)`
 `;
 
 interface Props {
-  portfolio: MockStockResponse[];
+  portfolio: StockOwnedResponseWithData[];
 }
 
 const PortfolioSummary = ({ portfolio }: Props) => {
@@ -26,11 +26,11 @@ const PortfolioSummary = ({ portfolio }: Props) => {
   const pieChartContainerRef = useRef<HTMLDivElement>(null);
 
   const total = portfolio.reduce((acc, stock) => {
-    return acc + stock.priceCurrent * stock.amount;
+    return acc + stock.priceCurrent * stock.quantity;
   }, 0);
 
   const totalBought = portfolio.reduce((acc, stock) => {
-    return acc + stock.priceBought * stock.amount;
+    return acc + stock.priceBought * stock.quantity;
   }, 0);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const PortfolioSummary = ({ portfolio }: Props) => {
 
   const sortedPortfolio = useMemo(() => {
     return [...portfolio].sort(
-      (a, b) => b.priceCurrent * b.amount - a.priceCurrent * a.amount
+      (a, b) => b.priceCurrent * b.quantity - a.priceCurrent * a.quantity
     );
   }, [portfolio]);
 
@@ -50,7 +50,7 @@ const PortfolioSummary = ({ portfolio }: Props) => {
     return sortedPortfolio
       .map((stock) => ({
         id: stock.code,
-        value: stock.priceCurrent * stock.amount,
+        value: stock.priceCurrent * stock.quantity,
         label: stock.name,
         color: stock.color,
       }))
@@ -175,7 +175,9 @@ const PortfolioSummary = ({ portfolio }: Props) => {
                 </Stack>
                 <Typography level="body-sm" noWrap>
                   <NumberFlow
-                    value={((stock.priceCurrent * stock.amount) / total) * 100}
+                    value={
+                      ((stock.priceCurrent * stock.quantity) / total) * 100
+                    }
                     format={{
                       minimumFractionDigits: 1,
                       maximumFractionDigits: 1,

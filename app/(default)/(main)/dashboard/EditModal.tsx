@@ -1,5 +1,5 @@
 import NumericFormatAdapter from "@/components/NumericFormatAdapter";
-import { MockStockResponse } from "@/types/Stock";
+import { StockOwnedResponseWithData } from "@/types/Stock";
 import {
   Button,
   DialogTitle,
@@ -22,9 +22,9 @@ type BoughtPriceInputMode = "price" | "totalPrice";
 
 interface Props {
   open: boolean;
-  value: MockStockResponse | null;
+  value: StockOwnedResponseWithData | null;
   onClose?: () => void;
-  onEdit?: (stock: MockStockResponse) => void;
+  onEdit?: (stock: StockOwnedResponseWithData) => void;
 }
 
 const EditModal = ({ open, value, onClose, onEdit }: Props) => {
@@ -47,7 +47,7 @@ const EditModal = ({ open, value, onClose, onEdit }: Props) => {
 
   const handleInit = useCallback(() => {
     if (!value) return;
-    setAmount(value.amount.toString());
+    setAmount(value.quantity.toString());
     setBoughtPrice(value.priceBought.toString());
     setAmountInputMode("amount");
     setBoughtPriceInputMode("price");
@@ -63,7 +63,7 @@ const EditModal = ({ open, value, onClose, onEdit }: Props) => {
     if (!value) return;
     onEdit?.({
       ...value,
-      amount: amountRealInputValue,
+      quantity: amountRealInputValue,
       priceBought: boughtPriceRealInputValue,
     });
     onClose?.();

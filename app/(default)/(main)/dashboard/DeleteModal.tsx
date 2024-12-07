@@ -1,4 +1,4 @@
-import { MockStockResponse } from "@/types/Stock";
+import { StockOwnedResponseWithData } from "@/types/Stock";
 import {
   Button,
   DialogContent,
@@ -12,9 +12,9 @@ import { ko } from "k-popo";
 
 interface Props {
   open: boolean;
-  value: MockStockResponse | null;
+  value: StockOwnedResponseWithData | null;
   onClose?: () => void;
-  onDelete?: (stock: MockStockResponse) => void;
+  onDelete?: (stock: StockOwnedResponseWithData) => void;
 }
 
 const DeleteModal = ({ open, value, onClose, onDelete }: Props) => {

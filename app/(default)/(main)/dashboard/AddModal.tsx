@@ -80,12 +80,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
 
       const { data } = await axios.post<ApiResponse<{ message: "string" }>>(
         "/api/stock/owned/add",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
       if (data.status === "error") {
         throw new Error(data.message);
