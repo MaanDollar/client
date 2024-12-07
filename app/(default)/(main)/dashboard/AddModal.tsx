@@ -1,6 +1,6 @@
 import NumericFormatAdapter from "@/components/NumericFormatAdapter";
 import StockSelect from "@/components/StockSelect";
-import { MockStockResponse } from "@/types/Stock";
+import { ApiResponse } from "@/types/Api";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Button,
@@ -17,6 +17,7 @@ import {
 } from "@mui/joy";
 import NumberFlow from "@number-flow/react";
 import { IconRefresh } from "@tabler/icons-react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 type AmountInputMode = "amount" | "total";
@@ -25,7 +26,7 @@ type BoughtPriceInputMode = "price" | "totalPrice";
 interface Props {
   open: boolean;
   onClose?: () => void;
-  onAdd?: (stock: MockStockResponse) => void;
+  onAdd?: () => void;
 }
 
 const AddModal = ({ open, onClose, onAdd }: Props) => {
@@ -37,6 +38,8 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     useState<AmountInputMode>("amount");
   const [boughtPriceInputMode, setBoughtPriceInputMode] =
     useState<BoughtPriceInputMode>("price");
+  const [loading, setLoading] = useState(false);
+
   const amountRealInputValue =
     amountInputMode === "amount"
       ? +amount
@@ -64,21 +67,37 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     }
   }, [open]);
 
-  const handleOnSubmit = () => {
-    if (!selectedStock) {
+  const handleOnSubmit = async () => {
+    if (!selectedStock || loading) {
       return;
     }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("code", selectedStock.code);
+      formData.append("quantity", amountRealInputValue.toString());
+      formData.append("price", boughtPriceRealInputValue.toString());
 
-    onAdd?.({
-      code: selectedStock.code,
-      name: selectedStock.name,
-      priceCurrent: selectedStock.close,
-      amount: amountRealInputValue,
-      priceBought: boughtPriceRealInputValue,
-      addedAt: new Date().toISOString(),
-      color: selectedStock.color,
-    });
-    onClose?.();
+      const { data } = await axios.post<ApiResponse<{ message: "string" }>>(
+        "/api/stock/owned/add",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (data.status === "error") {
+        throw new Error(data.message);
+      }
+
+      onAdd?.();
+      onClose?.();
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -230,7 +249,12 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
                 )}
               </FormControl>
               <div style={{ flex: 1 }} />
-              <Button type="submit">추가</Button>
+              <Button
+                type="submit"
+                disabled={!selectedStock || !amount || !boughtPrice || loading}
+              >
+                추가
+              </Button>
             </Stack>
           </form>
         </ModalDialog>

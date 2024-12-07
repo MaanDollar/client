@@ -3,6 +3,7 @@
 import Contents from "@/components/Contents";
 import { MOCK_STOCK_PORTFOLIO, MockStockResponse } from "@/types/Stock";
 import { Card } from "@mui/joy";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AddModal from "./AddModal";
 import DeleteModal from "./DeleteModal";
@@ -11,26 +12,16 @@ import PortfolioDetails from "./PortfolioDetails";
 import PortfolioSummary from "./PortfolioSummary";
 
 const Page = () => {
+  const router = useRouter();
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalValue, setEditModalValue] =
     useState<MockStockResponse | null>(null);
   const [deleteModalValue, setDeleteModalValue] =
     useState<MockStockResponse | null>(null);
-  const [portfolio, setPortfolio] =
-    useState<MockStockResponse[]>(MOCK_STOCK_PORTFOLIO);
+  const portfolio = MOCK_STOCK_PORTFOLIO;
 
-  const handleOnAdd = (stock: MockStockResponse) => {
-    setPortfolio([...portfolio, stock]);
-  };
-
-  const handleOnEdit = (stock: MockStockResponse) => {
-    setPortfolio(
-      portfolio.map((item) => (item.code === stock.code ? stock : item))
-    );
-  };
-
-  const handleOnDelete = (stock: MockStockResponse) => {
-    setPortfolio(portfolio.filter((item) => item.code !== stock.code));
+  const handleOnInvalidate = () => {
+    router.refresh();
   };
 
   return (
@@ -52,19 +43,19 @@ const Page = () => {
       <AddModal
         open={addModalOpen}
         onClose={() => setAddModalOpen(false)}
-        onAdd={handleOnAdd}
+        onAdd={handleOnInvalidate}
       />
       <EditModal
         open={!!editModalValue}
         value={editModalValue}
         onClose={() => setEditModalValue(null)}
-        onEdit={(stock) => handleOnEdit(stock)}
+        onEdit={handleOnInvalidate}
       />
       <DeleteModal
         open={!!deleteModalValue}
         value={deleteModalValue}
         onClose={() => setDeleteModalValue(null)}
-        onDelete={(stock) => handleOnDelete(stock)}
+        onDelete={handleOnInvalidate}
       />
     </>
   );
