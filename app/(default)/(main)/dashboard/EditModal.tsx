@@ -15,6 +15,7 @@ import {
 } from "@mui/joy";
 import NumberFlow from "@number-flow/react";
 import { IconRefresh } from "@tabler/icons-react";
+import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 
 type AmountInputMode = "amount" | "total";
@@ -24,10 +25,12 @@ interface Props {
   open: boolean;
   value: StockOwnedResponseWithData | null;
   onClose?: () => void;
-  onEdit?: (stock: StockOwnedResponseWithData) => void;
+  onEdit?: () => void;
 }
 
 const EditModal = ({ open, value, onClose, onEdit }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const [amount, setAmount] = useState<string>("");
   const [boughtPrice, setBoughtPrice] = useState<string>("");
   const [amountInputMode, setAmountInputMode] =
@@ -59,14 +62,23 @@ const EditModal = ({ open, value, onClose, onEdit }: Props) => {
     }
   }, [handleInit, open]);
 
-  const handleOnSubmit = () => {
-    if (!value) return;
-    onEdit?.({
-      ...value,
-      quantity: amountRealInputValue,
-      priceBought: boughtPriceRealInputValue,
-    });
-    onClose?.();
+  const handleOnSubmit = async () => {
+    if (!value || loading) return;
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("code", value.code);
+      formData.append("quantity", amount);
+      formData.append("price", boughtPrice);
+
+      await axios.post(`/api/stock/owned/${value.id}/modify`, formData);
+      onEdit?.();
+      onClose?.();
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -214,7 +226,9 @@ const EditModal = ({ open, value, onClose, onEdit }: Props) => {
                 )}
               </FormControl>
               <div style={{ flex: 1 }} />
-              <Button type="submit">수정</Button>
+              <Button type="submit" disabled={loading}>
+                수정
+              </Button>
             </Stack>
           </form>
         </ModalDialog>
