@@ -1,23 +1,24 @@
-import { MOCK_STOCK_OPTIONS } from "@/types/StockTemplate";
+import { listAllStocks } from "@/api/stock";
 import { notFound, redirect } from "next/navigation";
 
-const Page = ({
+const Page = async ({
   params,
 }: {
   params: {
     codeA: string;
   };
 }) => {
+  const stocks = await listAllStocks();
+  if (!stocks) {
+    return notFound();
+  }
+
   const { codeA } = params;
-  const mockStockTemplate = MOCK_STOCK_OPTIONS.find(
-    (item) => item.code === codeA
-  );
+  const mockStockTemplate = stocks.find((item) => item.code === codeA);
   if (!mockStockTemplate) {
     return notFound();
   }
-  const mockRelatedFirstStock = MOCK_STOCK_OPTIONS.find(
-    (item) => item.code !== codeA
-  );
+  const mockRelatedFirstStock = stocks.find((item) => item.code !== codeA);
   return redirect(`/stock/${codeA}/${mockRelatedFirstStock?.code}`);
 };
 

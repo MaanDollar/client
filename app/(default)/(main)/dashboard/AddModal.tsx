@@ -1,7 +1,7 @@
 import NumericFormatAdapter from "@/components/NumericFormatAdapter";
 import StockSelect from "@/components/StockSelect";
 import { MockStockResponse } from "@/types/Stock";
-import { MockStockTemplateResponse } from "@/types/StockTemplate";
+import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Button,
   DialogTitle,
@@ -30,7 +30,7 @@ interface Props {
 
 const AddModal = ({ open, onClose, onAdd }: Props) => {
   const [selectedStock, setSelectedStock] =
-    useState<MockStockTemplateResponse | null>(null);
+    useState<StockTemplateResponse | null>(null);
   const [amount, setAmount] = useState<string>("");
   const [boughtPrice, setBoughtPrice] = useState<string>("");
   const [amountInputMode, setAmountInputMode] =
@@ -41,7 +41,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     amountInputMode === "amount"
       ? +amount
       : selectedStock
-      ? Math.round(+amount / selectedStock.priceCurrent)
+      ? Math.round(+amount / selectedStock.close)
       : 0;
   const boughtPriceRealInputValue =
     boughtPriceInputMode === "price"
@@ -72,7 +72,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     onAdd?.({
       code: selectedStock.code,
       name: selectedStock.name,
-      priceCurrent: selectedStock.priceCurrent,
+      priceCurrent: selectedStock.close,
       amount: amountRealInputValue,
       priceBought: boughtPriceRealInputValue,
       addedAt: new Date().toISOString(),
@@ -107,7 +107,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
                 <Typography level="body-sm" textColor="text.tertiary">
                   현재가{" "}
                   <NumberFlow
-                    value={selectedStock?.priceCurrent || 0}
+                    value={selectedStock?.close || 0}
                     style={{
                       fontFeatureSettings: "'tnum'",
                     }}

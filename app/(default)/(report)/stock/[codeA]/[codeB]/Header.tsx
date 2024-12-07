@@ -2,10 +2,8 @@
 
 import StockSelect from "@/components/StockSelect";
 import StockSelectFromKnown from "@/components/StockSelectFromKnown";
-import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
+import { useSite } from "@/contexts/SiteContext";
+import { StockTemplateResponse } from "@/types/StockTemplate";
 import { styled, Typography } from "@mui/joy";
 import { Stack } from "@mui/material";
 import NumberFlow from "@number-flow/react";
@@ -21,16 +19,17 @@ const COLOR_DANGER = "#e53e3e";
 const COLOR_TEXT_TERTIARY = "#6b7280";
 
 interface Props {
-  stockA: MockStockTemplateResponse;
-  stockB: MockStockTemplateResponse;
+  stockA: StockTemplateResponse;
+  stockB: StockTemplateResponse;
 }
 
 const Header = ({ stockA, stockB }: Props) => {
+  const { stocks } = useSite();
   const router = useRouter();
 
-  const availableOptions = MOCK_STOCK_OPTIONS.filter(
-    (item) => item.code !== stockA.code
-  )
+  // TODO replace this with AI recommendations
+  const availableOptions = (stocks || [])
+    .filter((item) => item.code !== stockA.code)
     .slice(0, 5)
     .map((item) => item.code);
 
@@ -58,15 +57,15 @@ const Header = ({ stockA, stockB }: Props) => {
           <Typography
             level="title-lg"
             color={
-              stockA.priceCurrent - stockA.priceYesterday > 0
+              stockA.close - stockA.previous_close > 0
                 ? "danger"
-                : stockA.priceCurrent - stockA.priceYesterday < 0
+                : stockA.close - stockA.previous_close < 0
                 ? "primary"
                 : undefined
             }
           >
             <NumberFlow
-              value={stockA.priceCurrent}
+              value={stockA.close}
               style={{
                 fontFeatureSettings: "'tnum'",
               }}
@@ -75,8 +74,8 @@ const Header = ({ stockA, stockB }: Props) => {
             <small>
               <NumberFlow
                 value={
-                  ((stockA.priceCurrent - stockA.priceYesterday) /
-                    stockA.priceYesterday) *
+                  ((stockA.close - stockA.previous_close) /
+                    stockA.previous_close) *
                   100
                 }
                 format={{
@@ -94,9 +93,9 @@ const Header = ({ stockA, stockB }: Props) => {
             <Sparkline
               data={randomSparklineA}
               color={
-                stockA.priceCurrent - stockA.priceYesterday > 0
+                stockA.close - stockA.previous_close > 0
                   ? COLOR_DANGER
-                  : stockA.priceCurrent - stockA.priceYesterday < 0
+                  : stockA.close - stockA.previous_close < 0
                   ? COLOR_PRIMARY
                   : COLOR_TEXT_TERTIARY
               }
@@ -116,15 +115,15 @@ const Header = ({ stockA, stockB }: Props) => {
           <Typography
             level="title-lg"
             color={
-              stockB.priceCurrent - stockB.priceYesterday > 0
+              stockB.close - stockB.previous_close > 0
                 ? "danger"
-                : stockB.priceCurrent - stockB.priceYesterday < 0
+                : stockB.close - stockB.previous_close < 0
                 ? "primary"
                 : undefined
             }
           >
             <NumberFlow
-              value={stockB.priceCurrent}
+              value={stockB.close}
               style={{
                 fontFeatureSettings: "'tnum'",
               }}
@@ -133,8 +132,8 @@ const Header = ({ stockA, stockB }: Props) => {
             <small>
               <NumberFlow
                 value={
-                  ((stockB.priceCurrent - stockB.priceYesterday) /
-                    stockB.priceYesterday) *
+                  ((stockB.close - stockB.previous_close) /
+                    stockB.previous_close) *
                   100
                 }
                 format={{
@@ -152,9 +151,9 @@ const Header = ({ stockA, stockB }: Props) => {
             <Sparkline
               data={randomSparklineB}
               color={
-                stockB.priceCurrent - stockB.priceYesterday > 0
+                stockB.close - stockB.previous_close > 0
                   ? COLOR_DANGER
-                  : stockB.priceCurrent - stockB.priceYesterday < 0
+                  : stockB.close - stockB.previous_close < 0
                   ? COLOR_PRIMARY
                   : COLOR_TEXT_TERTIARY
               }

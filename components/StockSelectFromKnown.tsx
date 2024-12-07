@@ -1,28 +1,27 @@
+import { useSite } from "@/contexts/SiteContext";
 import { MOCK_STOCK_PORTFOLIO } from "@/types/Stock";
 import { MOCK_STOCK_INTEREST_LIST } from "@/types/StockInterest";
-import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
+import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Autocomplete,
-  Typography,
   AutocompleteOption,
-  ListItemContent,
   AutocompleteProps,
+  ListItemContent,
+  Typography,
 } from "@mui/joy";
 import { useMemo } from "react";
 
 interface Props
   extends Omit<
-    AutocompleteProps<MockStockTemplateResponse, false, false, false>,
+    AutocompleteProps<StockTemplateResponse, false, false, false>,
     "value" | "onChange" | "options" | "groupBy"
   > {
-  value: MockStockTemplateResponse | null;
-  onChange: (value: MockStockTemplateResponse | null) => void;
+  value: StockTemplateResponse | null;
+  onChange: (value: StockTemplateResponse | null) => void;
 }
 
 const StockSelectFromKnown = ({ value, onChange, ...rest }: Props) => {
+  const { stocks } = useSite();
   const options = useMemo(() => {
     const portfolio = MOCK_STOCK_PORTFOLIO.map((item) => item.code);
     const interest = MOCK_STOCK_INTEREST_LIST.map((item) => item.code);
@@ -30,14 +29,14 @@ const StockSelectFromKnown = ({ value, onChange, ...rest }: Props) => {
     const interestSet = new Set(interest);
 
     return [
-      ...MOCK_STOCK_OPTIONS.filter((item) => portfolioSet.has(item.code)).map(
-        (item) => ({ ...item, type: "portfolio" })
-      ),
-      ...MOCK_STOCK_OPTIONS.filter((item) => interestSet.has(item.code)).map(
-        (item) => ({ ...item, type: "interest" })
-      ),
+      ...(stocks || [])
+        .filter((item) => portfolioSet.has(item.code))
+        .map((item) => ({ ...item, type: "portfolio" })),
+      ...(stocks || [])
+        .filter((item) => interestSet.has(item.code))
+        .map((item) => ({ ...item, type: "interest" })),
     ];
-  }, []);
+  }, [stocks]);
 
   return (
     <Autocomplete

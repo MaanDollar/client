@@ -1,14 +1,14 @@
 "use client";
 
 import Contents from "@/components/Contents";
-import { MockStockTemplateResponse } from "@/types/StockTemplate";
+import { StockTemplateResponse } from "@/types/StockTemplate";
 import { Card, Stack, Typography } from "@mui/joy";
 import Header from "./Header";
 import Newsroom from "./Newsroom";
 
 interface Props {
-  stockA: MockStockTemplateResponse;
-  stockB: MockStockTemplateResponse;
+  stockA: StockTemplateResponse;
+  stockB: StockTemplateResponse;
 }
 
 const ClientPage = ({ stockA, stockB }: Props) => {

@@ -1,10 +1,7 @@
-import { MOCK_STOCK_OPTIONS } from "@/types/StockTemplate";
 import { redirect } from "next/navigation";
 
 const Page = () => {
-  return redirect(
-    `/stock/${MOCK_STOCK_OPTIONS[0].code}/${MOCK_STOCK_OPTIONS[1].code}`
-  );
+  return redirect("/stock/005930/000660");
 };
 
 export default Page;

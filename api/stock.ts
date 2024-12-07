@@ -1,0 +1,37 @@
+import { ApiResponse } from "@/types/Api";
+import { StockTemplateResponse } from "@/types/StockTemplate";
+import { axiosParams } from "@/utils/axios";
+import axios from "axios";
+import { cache } from "react";
+
+let stockCache: StockTemplateResponse[] | null = null;
+let stockCachedAt: Date | null = null;
+const STOCK_CACHE_INTERVAL = 1000 * 60 * 5; // 5 minutes
+
+export const listAllStocks = cache(
+  async (): Promise<StockTemplateResponse[] | null> => {
+    try {
+      if (
+        stockCache &&
+        stockCachedAt &&
+        new Date().getTime() - stockCachedAt.getTime() < STOCK_CACHE_INTERVAL
+      ) {
+        return stockCache;
+      }
+      const { data } = await axios.get<
+        ApiResponse<{
+          stocks: StockTemplateResponse[];
+        }>
+      >("/api/ai/stock_list", axiosParams());
+      if (data.status === "error") {
+        throw new Error(data.message);
+      }
+      stockCache = data.stocks;
+      stockCachedAt = new Date();
+      return data.stocks;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+);

@@ -1,34 +1,33 @@
-import {
-  MOCK_STOCK_OPTIONS,
-  MockStockTemplateResponse,
-} from "@/types/StockTemplate";
+import { useSite } from "@/contexts/SiteContext";
+import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Autocomplete,
-  Typography,
   AutocompleteOption,
-  ListItemContent,
   AutocompleteProps,
+  ListItemContent,
+  Typography,
 } from "@mui/joy";
 import { useMemo } from "react";
 
 interface Props
   extends Omit<
-    AutocompleteProps<MockStockTemplateResponse, false, false, false>,
+    AutocompleteProps<StockTemplateResponse, false, false, false>,
     "value" | "onChange" | "options"
   > {
-  value: MockStockTemplateResponse | null;
-  onChange: (value: MockStockTemplateResponse | null) => void;
+  value: StockTemplateResponse | null;
+  onChange: (value: StockTemplateResponse | null) => void;
   allowedCodes?: string[];
 }
 
 const StockSelect = ({ value, onChange, allowedCodes, ...rest }: Props) => {
+  const { stocks } = useSite();
   const options = useMemo(() => {
     if (!allowedCodes) {
-      return MOCK_STOCK_OPTIONS;
+      return stocks || [];
     }
     const allowedCodesSet = new Set(allowedCodes || []);
-    return MOCK_STOCK_OPTIONS.filter((item) => allowedCodesSet.has(item.code));
-  }, [allowedCodes]);
+    return (stocks || []).filter((item) => allowedCodesSet.has(item.code));
+  }, [allowedCodes, stocks]);
 
   return (
     <Autocomplete

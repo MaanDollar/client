@@ -1,8 +1,10 @@
+import { listAllStocks } from "@/api/stock";
 import { getUser } from "@/api/user";
+import { SiteProvider } from "@/contexts/SiteContext";
 import { UserProvider } from "@/contexts/UserContext";
+import axios from "axios";
 import type { Metadata } from "next";
 import ClientLayout from "./ClientLayout";
-import axios from "axios";
 
 axios.defaults.baseURL = "https://costockco.com";
 
@@ -16,7 +18,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser();
+  const [user, stocks] = await Promise.all([getUser(), listAllStocks()]);
 
   return (
     <html lang="ko">
@@ -31,7 +33,9 @@ export default async function RootLayout({
       </head>
       <body>
         <UserProvider user={user}>
-          <ClientLayout>{children}</ClientLayout>
+          <SiteProvider stocks={stocks}>
+            <ClientLayout>{children}</ClientLayout>
+          </SiteProvider>
         </UserProvider>
       </body>
     </html>
