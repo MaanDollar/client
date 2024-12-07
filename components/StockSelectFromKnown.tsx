@@ -1,6 +1,4 @@
 import { useSite } from "@/contexts/SiteContext";
-import { MOCK_STOCK_PORTFOLIO } from "@/types/Stock";
-import { MOCK_STOCK_INTEREST_LIST } from "@/types/StockInterest";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Autocomplete,
@@ -22,11 +20,13 @@ interface Props
 
 const StockSelectFromKnown = ({ value, onChange, ...rest }: Props) => {
   const { stocks } = useSite();
+  const { interest, portfolio } = useSite();
+
   const options = useMemo(() => {
-    const portfolio = MOCK_STOCK_PORTFOLIO.map((item) => item.code);
-    const interest = MOCK_STOCK_INTEREST_LIST.map((item) => item.code);
-    const portfolioSet = new Set(portfolio);
-    const interestSet = new Set(interest);
+    const portfolioCodes = (portfolio || []).map((item) => item.code);
+    const interestCodes = (interest || []).map((item) => item.code);
+    const portfolioSet = new Set(portfolioCodes);
+    const interestSet = new Set(interestCodes);
 
     return [
       ...(stocks || [])
@@ -36,7 +36,7 @@ const StockSelectFromKnown = ({ value, onChange, ...rest }: Props) => {
         .filter((item) => interestSet.has(item.code))
         .map((item) => ({ ...item, type: "interest" })),
     ];
-  }, [stocks]);
+  }, [interest, portfolio, stocks]);
 
   return (
     <Autocomplete

@@ -1,7 +1,7 @@
 "use client";
 
 import Centering from "@/components/Centering";
-import { MockStockInterestResponse } from "@/types/StockInterest";
+import { StockInterestedResponseWithData } from "@/types/StockInterest";
 import styled from "@emotion/styled";
 import { Button, Stack, Table, Typography } from "@mui/joy";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
@@ -46,9 +46,9 @@ const HeaderCell = ({
 };
 
 interface Props {
-  interest: MockStockInterestResponse[];
+  interest: StockInterestedResponseWithData[];
   onAddModalOpen: () => void;
-  onDeleteModalOpen: (stock: MockStockInterestResponse) => void;
+  onDeleteModalOpen: (stock: StockInterestedResponseWithData) => void;
 }
 
 const InterestDetails = ({

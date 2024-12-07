@@ -1,5 +1,5 @@
 import StockSelect from "@/components/StockSelect";
-import { MockStockInterestResponse } from "@/types/StockInterest";
+import { ApiResponse } from "@/types/Api";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import {
   Button,
@@ -14,15 +14,18 @@ import {
   Typography,
 } from "@mui/joy";
 import NumberFlow from "@number-flow/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface Props {
   open: boolean;
   onClose?: () => void;
-  onAdd?: (stock: MockStockInterestResponse) => void;
+  onAdd?: () => void;
 }
 
 const AddModal = ({ open, onClose, onAdd }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const [selectedStock, setSelectedStock] =
     useState<StockTemplateResponse | null>(null);
 
@@ -36,22 +39,30 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     }
   }, [open]);
 
-  const handleOnSubmit = () => {
-    if (!selectedStock) {
+  const handleOnSubmit = async () => {
+    if (!selectedStock || loading) {
       return;
     }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("code", selectedStock.code);
 
-    onAdd?.({
-      code: selectedStock.code,
-      name: selectedStock.name,
-      priceCurrent: selectedStock.close,
-      priceYesterday: Math.round(
-        selectedStock.close * (0.8 + 0.4 * Math.random())
-      ),
-      addedAt: new Date().toISOString(),
-      color: selectedStock.color,
-    });
-    onClose?.();
+      const { data } = await axios.post<ApiResponse<{ message: "string" }>>(
+        "/api/stock/recommended/add",
+        formData
+      );
+      if (data.status === "error") {
+        throw new Error(data.message);
+      }
+
+      onAdd?.();
+      onClose?.();
+    } catch (error) {
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,7 +100,9 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
                 </Typography>
               </FormControl>
               <div style={{ flex: 1 }} />
-              <Button type="submit">추가</Button>
+              <Button type="submit" disabled={!selectedStock}>
+                추가
+              </Button>
             </Stack>
           </form>
         </ModalDialog>

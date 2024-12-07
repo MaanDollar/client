@@ -1,6 +1,10 @@
 "use client";
 
 import { StockOwnedResponse, StockOwnedResponseWithData } from "@/types/Stock";
+import {
+  StockInterestedResponse,
+  StockInterestedResponseWithData,
+} from "@/types/StockInterest";
 import { StockTemplateResponse } from "@/types/StockTemplate";
 import axios from "axios";
 import { hsl, parseToHsl } from "polished";
@@ -33,6 +37,7 @@ const NOTABLE_COLORS = {
 interface SiteContextType {
   stocks: StockTemplateResponse[] | null;
   portfolio: StockOwnedResponseWithData[] | null;
+  interest: StockInterestedResponseWithData[] | null;
 }
 
 const SiteContext = createContext({ stocks: null } as SiteContextType);
@@ -40,11 +45,13 @@ const SiteContext = createContext({ stocks: null } as SiteContextType);
 interface SiteContextProviderProps {
   stocks: StockTemplateResponse[] | null;
   portfolio: StockOwnedResponse[] | null;
+  interest: StockInterestedResponse[] | null;
 }
 
 export const SiteProvider = ({
   stocks,
   portfolio,
+  interest,
   children,
 }: PropsWithChildren<SiteContextProviderProps>) => {
   useEffect(() => {
@@ -79,14 +86,18 @@ export const SiteProvider = ({
     );
   }, [stocks]);
 
-  const convertedPortfolio = useMemo(() => {
-    if (!stocksWithColors) return null;
-    const stocksMap = new Map<string, StockTemplateResponse>();
+  const stocksMap = useMemo(() => {
+    const ret = new Map<string, StockTemplateResponse>();
     if (stocksWithColors) {
       stocksWithColors.forEach((stock) => {
-        stocksMap.set(stock.code, stock);
+        ret.set(stock.code, stock);
       });
     }
+    return ret;
+  }, [stocksWithColors]);
+
+  const convertedPortfolio = useMemo(() => {
+    if (!stocksWithColors) return null;
     const ret =
       portfolio?.map(({ price, ...stock }) => {
         const template = stocksMap.get(stock.code)!;
@@ -99,14 +110,30 @@ export const SiteProvider = ({
         };
       }) || null;
     return ret;
-  }, [portfolio, stocksWithColors]);
+  }, [portfolio, stocksMap, stocksWithColors]);
+
+  const convertedInterest = useMemo(() => {
+    const ret =
+      interest?.map((stock) => {
+        const template = stocksMap.get(stock.code)!;
+        return {
+          ...stock,
+          name: template.name,
+          priceYesterday: template.previous_close,
+          priceCurrent: template.close,
+          color: template.color,
+        };
+      }) || null;
+    return ret;
+  }, [interest, stocksMap]);
 
   const contextValues = useMemo(
     () => ({
       stocks: stocksWithColors,
       portfolio: convertedPortfolio,
+      interest: convertedInterest,
     }),
-    [stocksWithColors, convertedPortfolio]
+    [stocksWithColors, convertedPortfolio, convertedInterest]
   );
 
   return (

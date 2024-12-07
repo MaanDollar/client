@@ -30,6 +30,8 @@ interface Props {
 }
 
 const AddModal = ({ open, onClose, onAdd }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const [selectedStock, setSelectedStock] =
     useState<StockTemplateResponse | null>(null);
   const [amount, setAmount] = useState<string>("");
@@ -38,7 +40,6 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
     useState<AmountInputMode>("amount");
   const [boughtPriceInputMode, setBoughtPriceInputMode] =
     useState<BoughtPriceInputMode>("price");
-  const [loading, setLoading] = useState(false);
 
   const amountRealInputValue =
     amountInputMode === "amount"

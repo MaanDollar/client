@@ -1,4 +1,4 @@
-import { listAllStocks, listPortfolio } from "@/api/stock";
+import { listAllStocks, listInterest, listPortfolio } from "@/api/stock";
 import { getUser } from "@/api/user";
 import { SiteProvider } from "@/contexts/SiteContext";
 import { UserProvider } from "@/contexts/UserContext";
@@ -18,10 +18,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [user, stocks, portfolio] = await Promise.all([
+  const [user, stocks, portfolio, interest] = await Promise.all([
     getUser(),
     listAllStocks(),
     listPortfolio(),
+    listInterest(),
   ]);
 
   return (
@@ -37,7 +38,11 @@ export default async function RootLayout({
       </head>
       <body>
         <UserProvider user={user}>
-          <SiteProvider stocks={stocks} portfolio={portfolio}>
+          <SiteProvider
+            stocks={stocks}
+            portfolio={portfolio}
+            interest={interest}
+          >
             <ClientLayout>{children}</ClientLayout>
           </SiteProvider>
         </UserProvider>
