@@ -80,7 +80,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
       formData.append("price", boughtPriceRealInputValue.toString());
 
       const { data } = await axios.post<ApiResponse<{ message: "string" }>>(
-        "/api/stock/owned/add",
+        "/api/stock/owned/add/",
         formData
       );
       if (data.status === "error") {

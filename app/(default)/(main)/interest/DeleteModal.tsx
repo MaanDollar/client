@@ -26,7 +26,7 @@ const DeleteModal = ({ open, value, onClose, onDelete }: Props) => {
     if (!value) return;
     setLoading(true);
     try {
-      await axios.post(`/api/stock/recommended/${value.id}/delete`);
+      await axios.post(`/api/stock/recommended/${value.id}/delete/`);
       onDelete?.();
       onClose?.();
     } catch (error) {

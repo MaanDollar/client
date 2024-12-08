@@ -71,7 +71,7 @@ const EditModal = ({ open, value, onClose, onEdit }: Props) => {
       formData.append("quantity", amount);
       formData.append("price", boughtPrice);
 
-      await axios.post(`/api/stock/owned/${value.id}/modify`, formData);
+      await axios.post(`/api/stock/owned/${value.id}/modify/`, formData);
       onEdit?.();
       onClose?.();
     } catch (error) {

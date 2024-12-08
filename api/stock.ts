@@ -25,7 +25,7 @@ export const listAllStocks = cache(
         ApiResponse<{
           stocks: StockTemplateResponse[];
         }>
-      >("/api/ai/stock_list", axiosParams());
+      >("/api/ai/stock_list/", axiosParams());
       if (data.status === "error") {
         throw new Error(data.message);
       }
@@ -46,7 +46,7 @@ export const listPortfolio = cache(
         ApiResponse<{
           data: { stocks: StockOwnedResponse[] };
         }>
-      >("/api/stock/owned/list", axiosParams());
+      >("/api/stock/owned/list/", axiosParams());
       if (data.status === "error") {
         throw new Error(data.message);
       }
@@ -65,7 +65,7 @@ export const listInterest = cache(
         ApiResponse<{
           data: { stocks: StockInterestedResponse[] };
         }>
-      >("/api/stock/recommended/list", axiosParams());
+      >("/api/stock/recommended/list/", axiosParams());
       if (data.status === "error") {
         throw new Error(data.message);
       }
@@ -81,7 +81,7 @@ export const listPriceDetails = cache(
   async (code: string): Promise<StockPriceResponse | null> => {
     try {
       const { data } = await axios.get<StockPriceResponse>(
-        `/api/ai/price/${code}`,
+        `/api/ai/price/${code}/`,
         axiosParams()
       );
       return data;

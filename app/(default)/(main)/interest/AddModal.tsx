@@ -49,7 +49,7 @@ const AddModal = ({ open, onClose, onAdd }: Props) => {
       formData.append("code", selectedStock.code);
 
       const { data } = await axios.post<ApiResponse<{ message: "string" }>>(
-        "/api/stock/recommended/add",
+        "/api/stock/recommended/add/",
         formData
       );
       if (data.status === "error") {

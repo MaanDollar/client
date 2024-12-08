@@ -10,7 +10,7 @@ export const getUser = cache(async (): Promise<User | null> => {
       | {
           username: null;
         }
-    >("/api/auth/current_user", axiosParams());
+    >("/api/auth/current_user/", axiosParams());
     if (!data.username) return null;
     return data;
   } catch (e) {
